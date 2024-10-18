@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="home_route_name">살펴보기</string>
-    <string name="posts_route_name">끄적끄적</string>
-    <string name="aboutMe_route_name">JunJaBoy</string>
+    <string name="home_route_name">Home</string>
+    <string name="posts_route_name">Posts</string>
+    <string name="aboutMe_route_name">Junsu</string>
 </resources>

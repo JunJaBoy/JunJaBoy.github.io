@@ -12,13 +12,13 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +56,6 @@ fun MainScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainNavigationRail(
     selectedRoute: MainDestinations,
@@ -64,6 +63,7 @@ private fun MainNavigationRail(
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(
+        modifier = modifier,
         header = {
             FloatingActionButton(
                 onClick = {
@@ -84,6 +84,7 @@ private fun MainNavigationRail(
             NavigationRailItem(
                 selected = selected,
                 onClick = { onSelectRoute(destination) },
+                label = { Text(text = destination.text) },
                 icon = {
                     Icon(
                         imageVector = destination.icon.run {
@@ -98,19 +99,6 @@ private fun MainNavigationRail(
                 },
             )
         }
-        NavigationRailItem(
-            selected = false,
-            onClick = {
-
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Home,
-                    // TODO
-                    contentDescription = null,
-                )
-            },
-        )
     }
 }
 
