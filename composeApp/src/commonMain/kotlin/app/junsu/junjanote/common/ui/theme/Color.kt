@@ -1,4 +1,4 @@
-package app.junsu.junjanote.common.jds
+package app.junsu.junjanote.common.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -217,10 +217,3 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF161D1C)
 val surfaceContainerDarkHighContrast = Color(0xFF1A2120)
 val surfaceContainerHighDarkHighContrast = Color(0xFF252B2A)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF303635)
-
-
-
-
-
-
-
