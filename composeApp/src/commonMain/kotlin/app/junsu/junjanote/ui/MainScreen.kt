@@ -1,9 +1,14 @@
 package app.junsu.junjanote.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
@@ -23,8 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import app.junsu.junjanote.common.ui.Destination
 import app.junsu.junjanote.common.ui.SelectableDestinationIcon
+import coil3.compose.AsyncImage
 import junjanote.composeapp.generated.resources.Res
 import junjanote.composeapp.generated.resources.aboutMe_route_name
 import junjanote.composeapp.generated.resources.home_route_name
@@ -49,8 +58,20 @@ fun MainScreen(
                 selectedRoute = selectedRoute,
                 onSelectRoute = onSelectRoute,
             )
-            LazyColumn {
-
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+                    .padding(all = 8.dp),
+            ) {
+                item {
+                    AsyncImage(
+                        model = "https://lh3.googleusercontent.com/DttyZQpJepBHlNe4pXEMJ5H6c53d97tplli_vXusdzZbpeY5SDLO7NwqiUEgqJ5VeAxvVdLT5suK_zGbZ0GpAe4NrjWbQqIf17uK5i0=w1064-v0",
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth().height(512.dp).clip(shape = RoundedCornerShape(24.dp)),
+                        onError = {
+                            it.result.throwable.printStackTrace()
+                        },
+                    )
+                }
             }
         }
     }

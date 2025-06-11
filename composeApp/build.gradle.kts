@@ -70,6 +70,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.ktor.core)
+            implementation(libs.coil.compose.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.mp)
+            implementation(libs.coil.network.ktor)
+            implementation(libs.bundles.ktor)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

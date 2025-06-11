@@ -11,10 +11,14 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.3"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
+# todo
+coil-compose = "3.0.0-alpha08"
+coil-network-ktor = "3.0.0-alpha08"
 compose-plugin = "1.6.11"
 junit = "4.13.2"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
+ktor = "3.0.0-wasm2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -30,6 +34,17 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-compose" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil-compose" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil-network-ktor" }
+coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "coil-compose" }
+
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -37,3 +52,6 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+
+[bundles]
+ktor = ["ktor-core", "ktor-client-encoding", "ktor-client-logging"]
