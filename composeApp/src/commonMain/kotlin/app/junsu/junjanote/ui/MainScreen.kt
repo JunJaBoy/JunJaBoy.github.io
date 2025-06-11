@@ -1,6 +1,7 @@
 package app.junsu.junjanote.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,6 +69,10 @@ fun MainScreen(
                 LazyColumn(
                     modifier = Modifier.widthIn(max = 1000.dp).fillMaxHeight(),
                     horizontalAlignment = Alignment.Start,
+                    contentPadding = PaddingValues(
+                        top = 32.0.dp,
+                        bottom = 32.0.dp,
+                    ),
                 ) {
                     item {
                         AsyncImage(
@@ -85,6 +90,9 @@ fun MainScreen(
                             text = "Junsu\nPark",
                             style = TextStyle(fontSize = 128.sp),
                         )
+                    }
+                    items(count = 15) { index ->
+                        Text("HIHI $index")
                     }
                 }
             }
