@@ -3,8 +3,10 @@ package app.junsu.junjanote.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -76,10 +78,10 @@ fun MainScreen(
                 ) {
                     item {
                         AsyncImage(
-                            model = "https://drupal-prod.visitcalifornia.com/sites/default/files/styles/fluid_1920/public/2025-01/VC_San-Francisco-Bay-Area-Region_gty-1348089637-RF_1280x640.jpg.webp?itok=gnJSI8kT",
+                            model = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.height(512.dp).clip(shape = RoundedCornerShape(24.dp)),
+                            modifier = Modifier.fillMaxWidth().height(512.dp).clip(shape = RoundedCornerShape(24.dp)),
                             onError = {
                                 it.result.throwable.printStackTrace()
                             },
@@ -89,10 +91,15 @@ fun MainScreen(
                         Text(
                             text = "Junsu\nPark",
                             style = TextStyle(fontSize = 128.sp),
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                     items(count = 15) { index ->
-                        Text("HIHI $index")
+                        Text(
+                            "HIHI $index",
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
