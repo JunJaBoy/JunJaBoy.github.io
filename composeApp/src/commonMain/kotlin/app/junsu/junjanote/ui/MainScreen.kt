@@ -1,6 +1,8 @@
 package app.junsu.junjanote.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,26 +60,30 @@ fun MainScreen(
                 selectedRoute = selectedRoute,
                 onSelectRoute = onSelectRoute,
             )
-            LazyColumn(
+            Box(
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                contentAlignment = Alignment.Center,
             ) {
-                item {
-                    AsyncImage(
-                        model = "https://lh3.googleusercontent.com/DttyZQpJepBHlNe4pXEMJ5H6c53d97tplli_vXusdzZbpeY5SDLO7NwqiUEgqJ5VeAxvVdLT5suK_zGbZ0GpAe4NrjWbQqIf17uK5i0=w1064-v0",
-                        contentDescription = null,
-                        modifier = Modifier.widthIn(max = 1000.dp).height(512.dp).clip(shape = RoundedCornerShape(24.dp)),
-                        onError = {
-                            it.result.throwable.printStackTrace()
-                        },
-                    )
-                }
-                item {
-                    Text(
-                        text = "Junsu\nPark",
-                        style = TextStyle(fontSize = 128.sp),
-                        modifier = Modifier.widthIn(max = 1000.dp),
-                    )
+                LazyColumn(
+                    modifier = Modifier.widthIn(max = 1000.dp).fillMaxHeight(),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    item {
+                        AsyncImage(
+                            model = "https://lh3.googleusercontent.com/DttyZQpJepBHlNe4pXEMJ5H6c53d97tplli_vXusdzZbpeY5SDLO7NwqiUEgqJ5VeAxvVdLT5suK_zGbZ0GpAe4NrjWbQqIf17uK5i0=w1064-v0",
+                            contentDescription = null,
+                            modifier = Modifier.height(512.dp).clip(shape = RoundedCornerShape(24.dp)),
+                            onError = {
+                                it.result.throwable.printStackTrace()
+                            },
+                        )
+                    }
+                    item {
+                        Text(
+                            text = "Junsu\nPark",
+                            style = TextStyle(fontSize = 128.sp),
+                        )
+                    }
                 }
             }
         }
