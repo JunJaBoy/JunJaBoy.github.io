@@ -26,9 +26,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -52,19 +54,20 @@ fun PostScreen(
     modifier: Modifier = Modifier,
 ) {
     val client = remember { HttpClient() }
-    val md = remember { mutableStateOf<ASTNode?>(null) }
+    var text by remember { mutableStateOf<String?>(null) }
+    var md by remember { mutableStateOf<ASTNode?>(null) }
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         scope.launch {
             print("LAUNCH CALLED")
-            val text = client.get("https://raw.githubusercontent.com/InsertKoinIO/koin/refs/heads/main/README.md").bodyAsText()
+            text = client.get("https://raw.githubusercontent.com/InsertKoinIO/koin/refs/heads/main/README.md").bodyAsText()
             val flavour = CommonMarkFlavourDescriptor()
-            val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text)
-            md.value = parsedTree
+            val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text!!)
+            md = parsedTree
         }
     }
 
-    if (md.value == null) return CircularProgressIndicator()
+    if (md == null || text == null) return CircularProgressIndicator()
 
     Scaffold(
         modifier = modifier,
@@ -103,9 +106,9 @@ fun PostScreen(
                         Text("And this is caption")
                     },
                 )
-                itemsIndexed(items = md.value!!.children) { index, item ->
+                itemsIndexed(items = md!!.children) { index, item ->
                     Text(
-                        text = "${item.type}",
+                        text = "${item.type} ${item.startOffset}:${item.endOffset}",
                         modifier = Modifier.postSheetItem(),
                     )
                     Spacer(
