@@ -74,6 +74,7 @@ kotlin {
             implementation(libs.coil.compose.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.mp)
+            implementation(libs.markdown)
             implementation(libs.coil.network.ktor)
             implementation(libs.bundles.ktor)
             implementation(libs.ktor.client.cio.jvm)
