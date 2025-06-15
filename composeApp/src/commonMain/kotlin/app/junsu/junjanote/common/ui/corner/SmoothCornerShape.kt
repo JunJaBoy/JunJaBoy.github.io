@@ -255,15 +255,35 @@ data class SmoothCornerShape(
 }
 
 fun SmoothCornerShape(
-    cornerRadius: Dp,
+    all: Dp,
     smoothnessAsPercent: Int = 60,
 ) = SmoothCornerShape(
-    cornerRadiusTL = cornerRadius,
+    cornerRadiusTL = all,
     smoothnessAsPercentTL = smoothnessAsPercent,
-    cornerRadiusTR = cornerRadius,
+    cornerRadiusTR = all,
     smoothnessAsPercentTR = smoothnessAsPercent,
-    cornerRadiusBR = cornerRadius,
+    cornerRadiusBR = all,
     smoothnessAsPercentBR = smoothnessAsPercent,
-    cornerRadiusBL = cornerRadius,
+    cornerRadiusBL = all,
     smoothnessAsPercentBL = smoothnessAsPercent,
 )
+
+
+fun SmoothCornerShape(
+    topLeft: Dp = 0.dp,
+    topRight: Dp = 0.dp,
+    bottomRight: Dp = 0.dp,
+    bottomLeft: Dp = 0.dp,
+    smoothnessAsPercent: Int = 60,
+) = SmoothCornerShape(
+    cornerRadiusTL = topLeft,
+    smoothnessAsPercentTL = smoothnessAsPercent,
+    cornerRadiusTR = topRight,
+    smoothnessAsPercentTR = smoothnessAsPercent,
+    cornerRadiusBR = bottomRight,
+    smoothnessAsPercentBR = smoothnessAsPercent,
+    cornerRadiusBL = bottomLeft,
+    smoothnessAsPercentBL = smoothnessAsPercent,
+)
+
+
