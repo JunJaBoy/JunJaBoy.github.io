@@ -9,19 +9,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import app.junsu.junjanote.common.ui.corner.SmoothCornerShape
 import app.junsu.junjanote.common.ui.layout.safeMaxWidth
 import app.junsu.junjanote.common.ui.postSheetFooterItem
 import app.junsu.junjanote.common.ui.postSheetHeaderItem
@@ -80,27 +86,70 @@ fun PostScreen(
                 }
                 postSheetFooterItem {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(
-                            space = 8.dp,
-                            alignment = Alignment.End,
-                        ),
+                        modifier = Modifier.fillMaxWidth().padding(all = 8.0.dp),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        IconButton(
-                            onClick = {},
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(
+                                space = 8.dp,
+                                alignment = Alignment.End,
+                            ),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Icon(
-                                Icons.Default.Share,
-                                contentDescription = null,
-                            )
+                            TextButton(
+                                onClick = {},
+                                shape = SmoothCornerShape(
+                                    all = 16.0.dp,
+                                ),
+                                modifier = Modifier.wrapContentHeight().widthIn(min = 200.0.dp),
+                                contentPadding = PaddingValues(all = 16.0.dp),
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Default.ArrowLeft,
+                                    contentDescription = null,
+                                )
+                                Text("Previous Post")
+                            }
+                            TextButton(
+                                onClick = {},
+                                shape = SmoothCornerShape(
+                                    all = 16.0.dp,
+                                ),
+                                modifier = Modifier.wrapContentHeight().widthIn(min = 200.0.dp),
+                                contentPadding = PaddingValues(all = 16.0.dp),
+                            ) {
+                                Text("Next Post")
+                                Icon(
+                                    Icons.AutoMirrored.Default.ArrowRight,
+                                    contentDescription = null,
+                                )
+                            }
+
                         }
-                        IconButton(
-                            onClick = {},
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(
+                                space = 8.dp,
+                                alignment = Alignment.End,
+                            ),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Icon(
-                                Icons.Default.Favorite,
-                                contentDescription = null,
-                            )
+                            IconButton(
+                                onClick = {},
+                            ) {
+                                Icon(
+                                    Icons.Default.Share,
+                                    contentDescription = null,
+                                )
+                            }
+                            IconButton(
+                                onClick = {},
+                            ) {
+                                Icon(
+                                    Icons.Default.Favorite,
+                                    contentDescription = null,
+                                )
+                            }
                         }
                     }
                 }

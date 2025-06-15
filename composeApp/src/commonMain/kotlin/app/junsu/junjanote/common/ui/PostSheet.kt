@@ -147,7 +147,7 @@ fun LazyListScope.postSheetFooterItem(
         contentType = contentType,
     ) {
         val cornerRadius = 32.0.dp
-        Column(
+        Surface(
             modifier = Modifier.fillMaxWidth().background(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = SmoothCornerShape(
@@ -155,9 +155,7 @@ fun LazyListScope.postSheetFooterItem(
                     bottomLeft = cornerRadius,
                 ),
             ).padding(padding),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 8.dp,
-            ),
+            color = Color.Transparent,
         ) {
             val edgeRadius = cornerRadius - padding.calculateTopPadding()
             Surface(
@@ -165,7 +163,7 @@ fun LazyListScope.postSheetFooterItem(
                     shape = SmoothCornerShape(all = edgeRadius),
                 ).background(
                     color = MaterialTheme.colorScheme.surface,
-                ).padding(all = 16.0.dp),
+                ),
                 color = Color.Transparent,
                 content = {
                     CompositionLocalProvider(
