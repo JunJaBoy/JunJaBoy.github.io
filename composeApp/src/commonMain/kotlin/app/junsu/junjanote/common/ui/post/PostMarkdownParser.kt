@@ -2,7 +2,9 @@ package app.junsu.junjanote.common.ui.post
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
@@ -15,6 +17,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
@@ -78,23 +81,60 @@ fun ASTNodeRenderer(
                         fontSize = fontSize,
                     ),
             ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Spacer(
+                        modifier = Modifier.postSheetItem().height(16.dp),
+                    )
                     Text(
                         text = headerText.toString().trim(),
                         modifier = Modifier.postSheetItem(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    HorizontalDivider(modifier = Modifier.postSheetItem())
+                    HorizontalDivider(
+                        modifier = Modifier.postSheetItem(),
+                    )
                 }
+            }
+        }
+
+        MarkdownElementTypes.PARAGRAPH -> {
+            val paragraphText = StringBuilder()
+            node.children.forEach { child ->
+                paragraphText.append(
+                    getRawTextOfRange(
+                        child.startOffset,
+                        child.endOffset,
+                    ),
+                )
+            }
+            CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography
+                    .bodyLarge,
+            ) {
+                Text(
+                    text = paragraphText.toString().trim(),
+                    modifier = Modifier.postSheetItem(),
+                    style = TextStyle(
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                )
             }
         }
 
         else -> if (childNodes.isEmpty()) {
             node.type.buildMarkdownTagType(
-                text = getRawTextOfRange(node.startOffset, node.endOffset),
+                text = getRawTextOfRange(
+                    node.startOffset,
+                    node.endOffset,
+                ),
             )
         } else {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
                 for (child in childNodes) {
                     ASTNodeRenderer(
                         node = child,
