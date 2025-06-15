@@ -1,14 +1,18 @@
 package app.junsu.junjanote.common.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,14 +23,15 @@ fun LazyListScope.postSheetHeaderItem(
     key: Any? = null,
     contentType: Any? = null,
     padding: PaddingValues = PaddingValues(all = 8.0.dp),
-    content: @Composable () -> Unit,
+    thumbnail: @Composable () -> Unit,
+    title: @Composable () -> Unit,
 ) {
     this.item(
         key = key,
         contentType = contentType,
     ) {
         val cornerRadius = 32.0.dp
-        Surface(
+        Column(
             modifier = Modifier.fillMaxWidth().background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = SmoothCornerShape(
@@ -34,16 +39,44 @@ fun LazyListScope.postSheetHeaderItem(
                     topRight = cornerRadius,
                 ),
             ).padding(padding),
-            color = Color.Transparent,
+            verticalArrangement = Arrangement.spacedBy(
+                space = 8.dp,
+            ),
         ) {
+            val edgeRadius = cornerRadius - padding.calculateTopPadding()
+            val contentRadius = edgeRadius / 2
             Surface(
                 modifier = Modifier.fillMaxWidth().clip(
                     shape = SmoothCornerShape(
-                        all = cornerRadius - padding.calculateTopPadding(),
+                        topRight = edgeRadius,
+                        topLeft = edgeRadius,
+                        bottomRight = contentRadius,
+                        bottomLeft = contentRadius,
                     ),
                 ),
                 color = Color.Transparent,
-                content = content,
+                content = thumbnail,
+            )
+            Surface(
+                modifier = Modifier.fillMaxWidth().clip(
+                    shape = SmoothCornerShape(
+                        topRight = contentRadius,
+                        topLeft = contentRadius,
+                        bottomRight = edgeRadius,
+                        bottomLeft = edgeRadius,
+                    ),
+                ).background(
+                    color = MaterialTheme.colorScheme.surface,
+                ).padding(
+                    all = 16.dp,
+                ),
+                color = Color.Transparent,
+                content = {
+                    CompositionLocalProvider(
+                        value = LocalTextStyle provides MaterialTheme.typography.displayLarge,
+                        content = title,
+                    )
+                },
             )
         }
     }

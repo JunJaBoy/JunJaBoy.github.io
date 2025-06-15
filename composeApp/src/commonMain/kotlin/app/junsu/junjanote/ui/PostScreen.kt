@@ -38,19 +38,24 @@ fun PostScreen(
                     vertical = 32.0.dp,
                 ),
             ) {
-                postSheetHeaderItem {
-                    AsyncImage(
-                        model = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxWidth().height(
-                            512.dp,
-                        ),
-                        onError = {
-                            it.result.throwable.printStackTrace()
-                        },
-                    )
-                }
+                postSheetHeaderItem(
+                    thumbnail = {
+                        AsyncImage(
+                            model = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxWidth().height(
+                                512.dp,
+                            ),
+                            onError = {
+                                it.result.throwable.printStackTrace()
+                            },
+                        )
+                    },
+                    title = {
+                        Text("This is Text Title")
+                    },
+                )
                 items(count = 25) { index ->
                     Text(
                         text = "HIHI TEXT $index",
