@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
@@ -37,16 +36,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import app.junsu.junjanote.common.ui.corner.SmoothCornerShape
 import app.junsu.junjanote.common.ui.layout.safeMaxWidth
-import app.junsu.junjanote.common.ui.postSheetFooterItem
-import app.junsu.junjanote.common.ui.postSheetHeaderItem
-import app.junsu.junjanote.common.ui.postSheetItem
+import app.junsu.junjanote.common.ui.post.markdownPostSheetItems
+import app.junsu.junjanote.common.ui.post.postSheetFooterItem
+import app.junsu.junjanote.common.ui.post.postSheetHeaderItem
 import coil3.compose.AsyncImage
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.launch
 import org.intellij.markdown.ast.ASTNode
-import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 
 @Composable
@@ -61,9 +60,13 @@ fun PostScreen(
         scope.launch {
             print("LAUNCH CALLED")
             text = client.get("https://raw.githubusercontent.com/InsertKoinIO/koin/refs/heads/main/README.md").bodyAsText()
-            val flavour = CommonMarkFlavourDescriptor()
+            val flavour = GFMFlavourDescriptor()
             val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text!!)
             md = parsedTree
+            md?.children?.forEach {
+                println("TREE TREE $it")
+
+            }
         }
     }
 
@@ -76,110 +79,112 @@ fun PostScreen(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             contentAlignment = Alignment.Center,
         ) {
-            LazyColumn(
-                modifier = Modifier.safeMaxWidth(),
-                contentPadding = PaddingValues(
-                    vertical = 32.0.dp,
-                ),
-            ) {
-                postSheetHeaderItem(
-                    thumbnail = {
-                        AsyncImage(
-                            model = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxWidth().height(
-                                512.dp,
-                            ),
-                            onError = {
-                                it.result.throwable.printStackTrace()
-                            },
-                        )
-                    },
-                    title = {
-                        Text("This is Text Title")
-                    },
-                    subtitle = {
-                        Text("Subtitle looks good")
-                    },
-                    description = {
-                        Text("And this is caption")
-                    },
-                )
-                itemsIndexed(items = md!!.children) { index, item ->
-                    Text(
-                        text = "${item.type} ${item.startOffset}:${item.endOffset}",
-                        modifier = Modifier.postSheetItem(),
+            SelectionContainer {
+                LazyColumn(
+                    modifier = Modifier.safeMaxWidth(),
+                    contentPadding = PaddingValues(
+                        vertical = 32.0.dp,
+                    ),
+                ) {
+                    postSheetHeaderItem(
+                        thumbnail = {
+                            AsyncImage(
+                                model = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxWidth().height(
+                                    512.dp,
+                                ),
+                                onError = {
+                                    it.result.throwable.printStackTrace()
+                                },
+                            )
+                        },
+                        title = {
+                            Text("This is Text Title")
+                        },
+                        subtitle = {
+                            Text("Subtitle looks good")
+                        },
+                        description = {
+                            Text("And this is caption")
+                        },
                     )
-                    Spacer(
-                        modifier = Modifier.postSheetItem(),
+                    markdownPostSheetItems(
+                        nodes = md!!.children,
+                        getRawTextOfRange = { startOffset, endOffset ->
+                            text!!.substring(startOffset until endOffset).trim()
+                        },
+                        key = { _, item ->
+                            item.hashCode()
+                        },
                     )
-                }
-                postSheetFooterItem {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(all = 8.0.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
+                    postSheetFooterItem {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(
-                                space = 8.dp,
-                                alignment = Alignment.End,
-                            ),
+                            modifier = Modifier.fillMaxWidth().padding(all = 8.0.dp),
                             verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            TextButton(
-                                onClick = {},
-                                shape = SmoothCornerShape(
-                                    all = 16.0.dp,
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    space = 8.dp,
+                                    alignment = Alignment.End,
                                 ),
-                                modifier = Modifier.wrapContentHeight().widthIn(min = 200.0.dp),
-                                contentPadding = PaddingValues(all = 16.0.dp),
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Icon(
-                                    Icons.AutoMirrored.Default.ArrowLeft,
-                                    contentDescription = null,
-                                )
-                                Text("Previous Post")
-                            }
-                            TextButton(
-                                onClick = {},
-                                shape = SmoothCornerShape(
-                                    all = 16.0.dp,
-                                ),
-                                modifier = Modifier.wrapContentHeight().widthIn(min = 200.0.dp),
-                                contentPadding = PaddingValues(all = 16.0.dp),
-                            ) {
-                                Text("Next Post")
-                                Icon(
-                                    Icons.AutoMirrored.Default.ArrowRight,
-                                    contentDescription = null,
-                                )
-                            }
+                                TextButton(
+                                    onClick = {},
+                                    shape = SmoothCornerShape(
+                                        all = 16.0.dp,
+                                    ),
+                                    modifier = Modifier.wrapContentHeight().widthIn(min = 200.0.dp),
+                                    contentPadding = PaddingValues(all = 16.0.dp),
+                                ) {
+                                    Icon(
+                                        Icons.AutoMirrored.Default.ArrowLeft,
+                                        contentDescription = null,
+                                    )
+                                    Text("Previous Post")
+                                }
+                                TextButton(
+                                    onClick = {},
+                                    shape = SmoothCornerShape(
+                                        all = 16.0.dp,
+                                    ),
+                                    modifier = Modifier.wrapContentHeight().widthIn(min = 200.0.dp),
+                                    contentPadding = PaddingValues(all = 16.0.dp),
+                                ) {
+                                    Text("Next Post")
+                                    Icon(
+                                        Icons.AutoMirrored.Default.ArrowRight,
+                                        contentDescription = null,
+                                    )
+                                }
 
-                        }
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(
-                                space = 8.dp,
-                                alignment = Alignment.End,
-                            ),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            IconButton(
-                                onClick = {},
-                            ) {
-                                Icon(
-                                    Icons.Default.Share,
-                                    contentDescription = null,
-                                )
                             }
-                            IconButton(
-                                onClick = {},
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    space = 8.dp,
+                                    alignment = Alignment.End,
+                                ),
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Icon(
-                                    Icons.Default.Favorite,
-                                    contentDescription = null,
-                                )
+                                IconButton(
+                                    onClick = {},
+                                ) {
+                                    Icon(
+                                        Icons.Default.Share,
+                                        contentDescription = null,
+                                    )
+                                }
+                                IconButton(
+                                    onClick = {},
+                                ) {
+                                    Icon(
+                                        Icons.Default.Favorite,
+                                        contentDescription = null,
+                                    )
+                                }
                             }
                         }
                     }
