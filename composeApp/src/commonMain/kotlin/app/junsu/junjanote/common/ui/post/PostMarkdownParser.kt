@@ -1,6 +1,7 @@
 package app.junsu.junjanote.common.ui.post
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.intellij.markdown.IElementType
+import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
 
@@ -29,28 +31,78 @@ fun LazyListScope.markdownPostSheetItems(
     this.itemsIndexed(
         items = nodes,
         key = key,
-    ) { index, node ->
-        node.buildMarkdownPostSheetItem(
+    ) { _, node ->
+        ASTNodeRenderer(
+            node = node,
             getRawTextOfRange = getRawTextOfRange,
         )
     }
 }
 
 @Composable
-tailrec fun ASTNode.buildMarkdownPostSheetItem(
+fun ASTNodeRenderer(
+    node: ASTNode,
     getRawTextOfRange: GetRawTextOfRangeCallback,
 ) {
-    val childNodes = this.children
-    if (childNodes.isEmpty()) {
-        return this.type.buildMarkdownTagType(
-            text = getRawTextOfRange(this.startOffset, this.endOffset),
-        )
-    }
+    val childNodes = node.children
 
-    for (child in childNodes) {
-        return child.buildMarkdownPostSheetItem(
-            getRawTextOfRange = getRawTextOfRange,
-        )
+    when (node.type) {
+        MarkdownElementTypes.ATX_1,
+        MarkdownElementTypes.ATX_2,
+        MarkdownElementTypes.ATX_3,
+        MarkdownElementTypes.ATX_4,
+        MarkdownElementTypes.ATX_5,
+        MarkdownElementTypes.ATX_6,
+            -> {
+            val headerText = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    headerText.append(getRawTextOfRange(child.startOffset, child.endOffset))
+                }
+            }
+
+            val fontSize = when (node.type) {
+                MarkdownElementTypes.ATX_1 -> 24.sp
+                MarkdownElementTypes.ATX_2 -> 20.sp
+                MarkdownElementTypes.ATX_3 -> 18.sp
+                MarkdownElementTypes.ATX_4 -> 16.sp
+                MarkdownElementTypes.ATX_5 -> 14.sp
+                MarkdownElementTypes.ATX_6 -> 12.sp
+                else -> 11.sp
+            }
+
+            CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography
+                    .titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = fontSize,
+                    ),
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = headerText.toString().trim(),
+                        modifier = Modifier.postSheetItem(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    HorizontalDivider(modifier = Modifier.postSheetItem())
+                }
+            }
+        }
+
+        else -> if (childNodes.isEmpty()) {
+            node.type.buildMarkdownTagType(
+                text = getRawTextOfRange(node.startOffset, node.endOffset),
+            )
+        } else {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                for (child in childNodes) {
+                    ASTNodeRenderer(
+                        node = child,
+                        getRawTextOfRange = getRawTextOfRange,
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -60,7 +112,7 @@ fun IElementType.buildMarkdownTagType(
     text: String,
 ) {
     when (this) {
-        MarkdownTokenTypes.TEXT -> CompositionLocalProvider(
+        MarkdownTokenTypes.TEXT, MarkdownTokenTypes.WHITE_SPACE -> CompositionLocalProvider(
             value = LocalTextStyle provides MaterialTheme.typography
                 .bodyLarge,
         ) {
@@ -81,53 +133,24 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.DOUBLE_QUOTE -> "A double quote character (\" )"
 //        MarkdownTokenTypes.LPAREN -> "Left parenthesis character ( ( )"
 //        MarkdownTokenTypes.RPAREN -> "Right parenthesis character ( ) )"
-//        MarkdownTokenTypes.LBRACKET -> "Left square bracket character ( [ )"
+//        MarkdownTokenTypes.LBRACKET -> Text("NONONONO~~")
 //        MarkdownTokenTypes.RBRACKET -> "Right square bracket character ( ] )"
 //        MarkdownTokenTypes.LT -> "Less than character ( < )"
 //        MarkdownTokenTypes.GT -> "Greater than character ( > )"
 //        MarkdownTokenTypes.COLON -> "Colon character ( : )"
 //        MarkdownTokenTypes.EXCLAMATION_MARK -> "Exclamation mark character ( ! )"
 //        MarkdownTokenTypes.HARD_LINE_BREAK -> "Explicit hard line break (two spaces + EOL)"
-//        MarkdownTokenTypes.EOL -> "End of line character (newline)"
+        MarkdownTokenTypes.EOL -> Text(
+            text = text,
+            modifier = modifier.postSheetItem(),
+            style = TextStyle(
+                fontSize = 11.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
+        )
 //        MarkdownTokenTypes.LINK_ID -> "Identifier for a reference link"
-        MarkdownTokenTypes.ATX_HEADER -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography
-                .titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                ),
-        ) {
-            Text(
-                text = text,
-                modifier = modifier.postSheetItem(),
-                style = TextStyle(
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                ),
-            )
-        }
-
-        MarkdownTokenTypes.ATX_CONTENT -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography
-                .titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                ),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = text,
-                    modifier = Modifier.postSheetItem(),
-                    style = TextStyle(
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                )
-                HorizontalDivider(
-                    modifier = Modifier.postSheetItem(),
-                )
-            }
-        }
+//        MarkdownTokenTypes.ATX_HEADER -> "==="
+//        MarkdownTokenTypes.ATX_CONTENT -> "HIHI"
 //        MarkdownTokenTypes.SETEXT_1 -> "Setext Level 1 heading underline ( = )"
 //        MarkdownTokenTypes.SETEXT_2 -> "Setext Level 2 heading underline ( - )"
 //        MarkdownTokenTypes.SETEXT_CONTENT -> "Content of a Setext header"
@@ -147,17 +170,17 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.EMAIL_AUTOLINK -> "An automatically recognized email link (e.g., <mailto:a@b.com>)"
 //        MarkdownTokenTypes.HTML_TAG -> "Raw HTML tag"
 //        MarkdownTokenTypes.BAD_CHARACTER -> "An unrecognized or invalid character"
-//        MarkdownTokenTypes.WHITE_SPACE -> "Whitespace character(s)"
         else -> CompositionLocalProvider(
             value = LocalTextStyle provides MaterialTheme.typography
                 .bodyMedium,
         ) {
             TextButton(
                 onClick = {},
+                modifier = Modifier.postSheetItem(),
+                contentPadding = PaddingValues(),
             ) {
                 Text(
                     "TYPE ${this@buildMarkdownTagType.name} NOT HANDLED.",
-                    modifier = Modifier.postSheetItem(),
                 )
             }
         }
