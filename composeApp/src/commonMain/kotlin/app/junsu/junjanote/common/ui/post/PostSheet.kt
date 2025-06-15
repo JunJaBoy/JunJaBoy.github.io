@@ -1,4 +1,4 @@
-package app.junsu.junjanote.common.ui
+package app.junsu.junjanote.common.ui.post
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
