@@ -12,17 +12,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,11 +39,33 @@ import app.junsu.junjanote.common.ui.postSheetFooterItem
 import app.junsu.junjanote.common.ui.postSheetHeaderItem
 import app.junsu.junjanote.common.ui.postSheetItem
 import coil3.compose.AsyncImage
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.launch
+import org.intellij.markdown.ast.ASTNode
+import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
+import org.intellij.markdown.parser.MarkdownParser
 
 @Composable
 fun PostScreen(
     modifier: Modifier = Modifier,
 ) {
+    val client = remember { HttpClient() }
+    val md = remember { mutableStateOf<ASTNode?>(null) }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        scope.launch {
+            print("LAUNCH CALLED")
+            val text = client.get("https://raw.githubusercontent.com/InsertKoinIO/koin/refs/heads/main/README.md").bodyAsText()
+            val flavour = CommonMarkFlavourDescriptor()
+            val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text)
+            md.value = parsedTree
+        }
+    }
+
+    if (md.value == null) return CircularProgressIndicator()
+
     Scaffold(
         modifier = modifier,
     ) { paddingValues ->
@@ -75,9 +103,9 @@ fun PostScreen(
                         Text("And this is caption")
                     },
                 )
-                items(count = 25) { index ->
+                itemsIndexed(items = md.value!!.children) { index, item ->
                     Text(
-                        text = "HIHI TEXT $index",
+                        text = "${item.type}",
                         modifier = Modifier.postSheetItem(),
                     )
                     Spacer(
