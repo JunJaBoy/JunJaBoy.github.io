@@ -24,7 +24,9 @@ fun LazyListScope.postSheetHeaderItem(
         Surface(
             modifier = Modifier.fillMaxWidth().height(32.0.dp).clip(
                 shape = SmoothCornerShape(
-                    topLeft = 32.0.dp, topRight = 32.0.dp,
+                    topLeft = 32.0.dp,
+                    topRight = 32.0.dp,
+                    smoothnessAsPercent = 0,
                 ),
             ),
             content = {},
@@ -44,7 +46,9 @@ fun LazyListScope.postSheetFooterItem(
         Surface(
             modifier = Modifier.fillMaxWidth().height(32.0.dp).clip(
                 shape = SmoothCornerShape(
-                    bottomLeft = 32.0.dp, bottomRight = 32.0.dp,
+                    bottomLeft = 32.0.dp,
+                    bottomRight = 32.0.dp,
+                    smoothnessAsPercent = 0,
                 ),
             ),
             content = {},
