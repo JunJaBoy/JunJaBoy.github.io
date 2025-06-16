@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -84,6 +85,7 @@ fun ASTNodeRenderer(
             val headerText = StringBuilder()
             node.children.forEach { child ->
                 if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    println("${node.type.name} CHILD CHILD $child ${getRawTextOfRange(child.startOffset, child.endOffset)}")
                     headerText.append(getRawTextOfRange(child.startOffset, child.endOffset))
                 }
             }
@@ -106,7 +108,7 @@ fun ASTNodeRenderer(
                     getRawTextOfRange = getRawTextOfRange,
                 )
             }
-            node.type.buildMarkdownTagType(
+            MarkdownTokenTypes.TEXT.buildMarkdownTagType(
                 text = paragraphText.toString(),
             )
         }
@@ -127,6 +129,7 @@ fun ASTNodeRenderer(
         }
 
         else -> if (childNodes.isEmpty()) {
+            println("NODE NODE ${node.type} ${getRawTextOfRange(node.startOffset, node.endOffset)}")
             node.type.buildMarkdownTagType(
                 text = getRawTextOfRange(
                     node.startOffset,
@@ -154,6 +157,7 @@ fun IElementType.buildMarkdownTagType(
         MarkdownTokenTypes.WHITE_SPACE,
         MarkdownTokenTypes.SINGLE_QUOTE,
         MarkdownTokenTypes.DOUBLE_QUOTE,
+        MarkdownTokenTypes.EOL,
             -> CompositionLocalProvider(
             value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface,
@@ -177,7 +181,7 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.COLON -> "Colon character ( : )"
 //        MarkdownTokenTypes.EXCLAMATION_MARK -> "Exclamation mark character ( ! )"
 //        MarkdownTokenTypes.HARD_LINE_BREAK -> "Explicit hard line break (two spaces + EOL)"
-        MarkdownTokenTypes.EOL -> CompositionLocalProvider(
+        MarkdownTokenTypes.HARD_LINE_BREAK -> CompositionLocalProvider(
             value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),

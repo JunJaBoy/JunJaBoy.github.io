@@ -15,6 +15,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import app.junsu.junjanote.common.ui.corner.SmoothCornerShape
 
@@ -83,6 +84,7 @@ fun LazyListScope.postSheetHeaderItem(
                         CompositionLocalProvider(
                             value = LocalTextStyle provides MaterialTheme.typography.displayLarge.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = FontFamily.Serif,
                             ),
                             content = title,
                         )
@@ -102,6 +104,7 @@ fun LazyListScope.postSheetHeaderItem(
                         CompositionLocalProvider(
                             value = LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = FontFamily.SansSerif,
                             ),
                             content = subtitle,
                         )
