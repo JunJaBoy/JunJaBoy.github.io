@@ -6,6 +6,6 @@ import androidx.compose.ui.unit.dp
 
 fun Modifier.safeMaxWidth(): Modifier = this.then(
     Modifier.widthIn(
-        max = 1000.dp,
+        max = 1200.dp,
     ),
 )
