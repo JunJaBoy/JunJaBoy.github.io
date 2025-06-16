@@ -191,7 +191,7 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.ATX_HEADER -> "==="
 //        MarkdownTokenTypes.ATX_CONTENT -> "HIHI"
         MarkdownTokenTypes.SETEXT_1 -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
+            value = LocalTextStyle provides MaterialTheme.typography.displayMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
             ),
@@ -203,7 +203,7 @@ fun IElementType.buildMarkdownTagType(
         }
 
         MarkdownTokenTypes.SETEXT_2 -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
+            value = LocalTextStyle provides MaterialTheme.typography.displaySmall.copy(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
             ),
