@@ -150,7 +150,11 @@ fun IElementType.buildMarkdownTagType(
     text: String,
 ) {
     when (this) {
-        MarkdownTokenTypes.TEXT, MarkdownTokenTypes.WHITE_SPACE -> CompositionLocalProvider(
+        MarkdownTokenTypes.TEXT,
+        MarkdownTokenTypes.WHITE_SPACE,
+        MarkdownTokenTypes.SINGLE_QUOTE,
+        MarkdownTokenTypes.DOUBLE_QUOTE,
+            -> CompositionLocalProvider(
             value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
@@ -164,8 +168,6 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.CODE_LINE -> "A line of code (often inside a code block)"
 //        MarkdownTokenTypes.BLOCK_QUOTE -> "Blockquote character (e.g., '>')"
 //        MarkdownTokenTypes.HTML_BLOCK_CONTENT -> "Content inside an HTML block"
-//        MarkdownTokenTypes.SINGLE_QUOTE -> "A single quote character (' )"
-//        MarkdownTokenTypes.DOUBLE_QUOTE -> "A double quote character (\" )"
 //        MarkdownTokenTypes.LPAREN -> "Left parenthesis character ( ( )"
 //        MarkdownTokenTypes.RPAREN -> "Right parenthesis character ( ) )"
 //        MarkdownTokenTypes.LBRACKET -> Text("NONONONO~~")
@@ -226,10 +228,7 @@ fun IElementType.buildMarkdownTagType(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "·",
-                )
-                Text(
-                    text = text,
+                    text = text.replaceFirst("-", "• "),
                     modifier = Modifier.weight(1f),
                 )
             }

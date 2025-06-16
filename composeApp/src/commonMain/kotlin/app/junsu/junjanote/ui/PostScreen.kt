@@ -59,7 +59,7 @@ fun PostScreen(
     LaunchedEffect(Unit) {
         scope.launch {
             print("LAUNCH CALLED")
-            text = client.get("https://raw.githubusercontent.com/JunJaBoy/JunJaBoy/refs/heads/main/README.md").bodyAsText()
+            text = client.get("https://raw.githubusercontent.com/vercel/next.js/refs/heads/canary/packages/next/README.md").bodyAsText()
             val flavour = GFMFlavourDescriptor()
             val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text!!)
             md = parsedTree
