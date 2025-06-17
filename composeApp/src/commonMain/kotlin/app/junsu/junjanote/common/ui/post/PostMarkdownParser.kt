@@ -167,7 +167,10 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
+                modifier = Modifier.postSheetItem().padding(
+                    top = 16.dp,
+                    bottom = 8.dp,
+                ),
             )
         }
 
@@ -192,7 +195,10 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
+                modifier = Modifier.postSheetItem().padding(
+                    top = 16.dp,
+                    bottom = 8.dp,
+                ),
             )
         }
 
@@ -217,7 +223,10 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
+                modifier = Modifier.postSheetItem().padding(
+                    top = 16.dp,
+                    bottom = 8.dp,
+                ),
             )
         }
 
@@ -244,7 +253,10 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
+                modifier = Modifier.postSheetItem().padding(
+                    top = 16.dp,
+                    bottom = 8.dp,
+                ),
             )
         }
 
