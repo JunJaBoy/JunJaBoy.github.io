@@ -1,13 +1,17 @@
 package app.junsu.junjanote.common.ui.post
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,6 +49,7 @@ fun LazyListScope.markdownPostSheetItems(
     }
 }
 
+
 @Composable
 fun ASTNodeRenderer(
     node: ASTNode,
@@ -76,42 +81,187 @@ fun ASTNodeRenderer(
         }
 
         MarkdownElementTypes.ATX_1,
-        MarkdownElementTypes.ATX_2,
-        MarkdownElementTypes.ATX_3,
-        MarkdownElementTypes.ATX_4,
-        MarkdownElementTypes.ATX_5,
-        MarkdownElementTypes.ATX_6,
-            -> {
+        MarkdownTokenTypes.SETEXT_1,
+            -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.displayMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+            ),
+        ) {
             val headerText = StringBuilder()
             node.children.forEach { child ->
                 if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
-                    println("${node.type.name} CHILD CHILD $child ${getRawTextOfRange(child.startOffset, child.endOffset)}")
                     headerText.append(getRawTextOfRange(child.startOffset, child.endOffset))
                 }
             }
-
-            val tokenType = when (node.type) {
-                MarkdownElementTypes.ATX_1 -> MarkdownTokenTypes.SETEXT_1
-                MarkdownElementTypes.ATX_2 -> MarkdownTokenTypes.SETEXT_2
-                else -> MarkdownTokenTypes.TEXT
-            }
-            tokenType.buildMarkdownTagType(
-                text = headerText.toString(),
-            )
-        }
-
-        MarkdownElementTypes.PARAGRAPH -> {
-            val paragraphText = StringBuilder()
-            node.children.forEach { child ->
-                ASTNodeRenderer(
-                    node = child,
-                    getRawTextOfRange = getRawTextOfRange,
+            Column(
+                modifier = Modifier.postSheetItem().padding(
+                    top = 32.0.dp,
+                    bottom = 16.0.dp,
+                ),
+            ) {
+                Text(
+                    text = headerText.toString(),
+                )
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
-            MarkdownTokenTypes.TEXT.buildMarkdownTagType(
-                text = paragraphText.toString(),
+        }
+
+
+        MarkdownElementTypes.ATX_2,
+        MarkdownTokenTypes.SETEXT_2,
+            -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.displaySmall.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+            ),
+        ) {
+            val headerText = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    headerText.append(
+                        getRawTextOfRange(
+                            child.startOffset,
+                            child.endOffset,
+                        ),
+                    )
+                }
+            }
+            Text(
+                text = headerText.toString(),
+                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
             )
         }
+
+        MarkdownElementTypes.ATX_3,
+            -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+            ),
+        ) {
+            val headerText = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    headerText.append(
+                        getRawTextOfRange(
+                            child.startOffset,
+                            child.endOffset,
+                        ),
+                    )
+                }
+            }
+            Text(
+                text = headerText.toString(),
+                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+            )
+        }
+
+        MarkdownElementTypes.ATX_4,
+            -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+            ),
+        ) {
+            val headerText = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    headerText.append(
+                        getRawTextOfRange(
+                            child.startOffset,
+                            child.endOffset,
+                        ),
+                    )
+                }
+            }
+            Text(
+                text = headerText.toString(),
+                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+            )
+        }
+
+        MarkdownElementTypes.ATX_5,
+            -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+            ),
+        ) {
+            val headerText = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    headerText.append(
+                        getRawTextOfRange(
+                            child.startOffset,
+                            child.endOffset,
+                        ),
+                    )
+                }
+            }
+            Text(
+                text = headerText.toString(),
+                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+            )
+        }
+
+        MarkdownElementTypes.ATX_6,
+            -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.38f,
+                ),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+            ),
+        ) {
+            val headerText = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    headerText.append(
+                        getRawTextOfRange(
+                            child.startOffset,
+                            child.endOffset,
+                        ),
+                    )
+                }
+            }
+            Text(
+                text = headerText.toString(),
+                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+            )
+        }
+
+
+        MarkdownElementTypes.PARAGRAPH, MarkdownTokenTypes.TEXT -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
+        ) {
+            val text = StringBuilder()
+            node.children.forEach { child ->
+                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                    text.append(
+                        getRawTextOfRange(
+                            child.startOffset,
+                            child.endOffset,
+                        ),
+                    )
+                }
+            }
+            Text(
+                text = text.toString(),
+                modifier = Modifier.postSheetItem(),
+            )
+        }
+
 
         MarkdownElementTypes.LIST_ITEM -> {
             val paragraphText = StringBuilder()
@@ -129,7 +279,6 @@ fun ASTNodeRenderer(
         }
 
         else -> if (childNodes.isEmpty()) {
-            println("NODE NODE ${node.type} ${getRawTextOfRange(node.startOffset, node.endOffset)}")
             node.type.buildMarkdownTagType(
                 text = getRawTextOfRange(
                     node.startOffset,
@@ -137,12 +286,12 @@ fun ASTNodeRenderer(
                 ),
             )
         } else {
-            for (child in childNodes) {
-                ASTNodeRenderer(
-                    node = child,
-                    getRawTextOfRange = getRawTextOfRange,
-                )
-            }
+//            for (child in childNodes) {
+//                ASTNodeRenderer(
+//                    node = child,
+//                    getRawTextOfRange = getRawTextOfRange,
+//                )
+//            }
         }
     }
 }
@@ -154,20 +303,13 @@ fun IElementType.buildMarkdownTagType(
 ) {
     when (this) {
         MarkdownTokenTypes.TEXT,
-        MarkdownTokenTypes.WHITE_SPACE,
         MarkdownTokenTypes.SINGLE_QUOTE,
         MarkdownTokenTypes.DOUBLE_QUOTE,
+        MarkdownTokenTypes.COLON,
+
         MarkdownTokenTypes.EOL,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-        ) {
-            Text(
-                text = text,
-                modifier = modifier.postSheetItem(),
-            )
-        }
+        MarkdownTokenTypes.WHITE_SPACE,
+            -> Spacer(modifier = Modifier)
 
 //        MarkdownTokenTypes.CODE_LINE -> "A line of code (often inside a code block)"
 //        MarkdownTokenTypes.BLOCK_QUOTE -> "Blockquote character (e.g., '>')"
@@ -178,7 +320,6 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.RBRACKET -> "Right square bracket character ( ] )"
 //        MarkdownTokenTypes.LT -> "Less than character ( < )"
 //        MarkdownTokenTypes.GT -> "Greater than character ( > )"
-//        MarkdownTokenTypes.COLON -> "Colon character ( : )"
 //        MarkdownTokenTypes.EXCLAMATION_MARK -> "Exclamation mark character ( ! )"
 //        MarkdownTokenTypes.HARD_LINE_BREAK -> "Explicit hard line break (two spaces + EOL)"
         MarkdownTokenTypes.HARD_LINE_BREAK -> CompositionLocalProvider(
@@ -187,37 +328,16 @@ fun IElementType.buildMarkdownTagType(
             ),
         ) {
             Text(
-                text = "\n",
+                text = "\nj",
                 modifier = modifier.postSheetItem(),
             )
         }
 //        MarkdownTokenTypes.LINK_ID -> "Identifier for a reference link"
 //        MarkdownTokenTypes.ATX_HEADER -> "==="
 //        MarkdownTokenTypes.ATX_CONTENT -> "HIHI"
-        MarkdownTokenTypes.SETEXT_1 -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.displayMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-            ),
-        ) {
-            Text(
-                text = text,
-                modifier = modifier.postSheetItem(),
-            )
-        }
 
-        MarkdownTokenTypes.SETEXT_2 -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.displaySmall.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-            ),
-        ) {
-            Text(
-                text = text,
-                modifier = modifier.postSheetItem(),
-            )
-        }
-//        MarkdownTokenTypes.SETEXT_CONTENT -> "Content of a Setext header"
+
+        MarkdownTokenTypes.SETEXT_CONTENT -> Text("HIHI " + text)
 //        MarkdownTokenTypes.EMPH -> "Emphasis delimiter ( * or _ )"
 //        MarkdownTokenTypes.BACKTICK -> "Backtick character ( ` )"
 //        MarkdownTokenTypes.ESCAPED_BACKTICKS -> "Escaped backticks (e.g., for inline code with backticks)"
@@ -246,7 +366,11 @@ fun IElementType.buildMarkdownTagType(
             onError = { it.result.throwable.printStackTrace() },
         )
 
-//        MarkdownTokenTypes.HORIZONTAL_RULE -> "Horizontal rule characters ( --- , *** , ___ )"
+        MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalDivider(
+            modifier = Modifier.postSheetItem().padding(
+                vertical = 32.0.dp,
+            ),
+        )
 //        MarkdownTokenTypes.LIST_NUMBER -> "Ordered list number (e.g., '1.')"
 //        MarkdownTokenTypes.FENCE_LANG -> "Language specifier for a code fence"
 //        MarkdownTokenTypes.CODE_FENCE_START -> "Start delimiter of a code fence ( ` ` ` or ~ ~ ~ )"
