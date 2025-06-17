@@ -131,10 +131,19 @@ fun ASTNodeRenderer(
                     )
                 }
             }
-            Text(
-                text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
-            )
+            Column(
+                modifier = Modifier.postSheetItem().padding(
+                    top = 32.0.dp,
+                    bottom = 16.0.dp,
+                ),
+            ) {
+                Text(
+                    text = headerText.toString(),
+                )
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
 
         MarkdownElementTypes.ATX_3,
@@ -158,7 +167,7 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
             )
         }
 
@@ -183,7 +192,7 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
             )
         }
 
@@ -208,7 +217,7 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
             )
         }
 
@@ -235,7 +244,7 @@ fun ASTNodeRenderer(
             }
             Text(
                 text = headerText.toString(),
-                modifier = Modifier.postSheetItem().padding(vertical = 8.0.dp),
+                modifier = Modifier.postSheetItem().padding(vertical = 16.0.dp),
             )
         }
 
