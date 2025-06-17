@@ -262,7 +262,7 @@ fun ASTNodeRenderer(
 
 
         MarkdownElementTypes.PARAGRAPH, MarkdownTokenTypes.TEXT -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
+            value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
         ) {
