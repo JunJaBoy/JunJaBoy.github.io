@@ -1,6 +1,7 @@
 package app.junsu.junjanote.common.ui.post
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,10 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
@@ -86,17 +93,19 @@ private fun ASTNodeRenderer(
 
         MarkdownElementTypes.ATX_1, MarkdownElementTypes.SETEXT_1 -> {
             val cornerRadius = 16.0.dp
-            Column(
+            Row(
                 modifier = Modifier.postSheetItem(
                     padding = PaddingValues(
                         horizontal = 16.0.dp,
                     ),
                 ).fillMaxWidth().background(
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = SmoothCornerShape(
                         all = cornerRadius,
                     ),
                 ).padding(all = 16.0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 MarkdownHeader(
                     node = node,
@@ -107,6 +116,17 @@ private fun ASTNodeRenderer(
                     ),
                     modifier = modifier,
                 )
+                IconButton(
+                    onClick = {},
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+                ) {
+                    Icon(
+                        Icons.Default.ContentCopy,
+                        contentDescription = null,
+                    )
+                }
             }
         }
 
