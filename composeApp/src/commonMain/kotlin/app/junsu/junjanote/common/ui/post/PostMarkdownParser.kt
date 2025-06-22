@@ -51,7 +51,7 @@ fun LazyListScope.markdownPostSheetItems(
 
 
 @Composable
-fun ASTNodeRenderer(
+private fun ASTNodeRenderer(
     node: ASTNode,
     getRawTextOfRange: GetRawTextOfRangeCallback,
 ) {
@@ -59,7 +59,7 @@ fun ASTNodeRenderer(
 
     when (node.type) {
         MarkdownElementTypes.IMAGE -> {
-            val imageUrlNode = node.children.find { child ->
+            val imageUrlNode = childNodes.find { child ->
                 child.type == MarkdownElementTypes.INLINE_LINK
             }!!.children.find { child ->
                 child.type == MarkdownElementTypes.LINK_DESTINATION
@@ -80,6 +80,30 @@ fun ASTNodeRenderer(
             )
         }
 
+        MarkdownTokenTypes.EOL -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
+        ) {
+
+            Text(
+                text = "",
+                modifier = Modifier.postSheetItem(),
+            )
+        }
+
+
+        MarkdownTokenTypes.TEXT -> CompositionLocalProvider(
+            value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
+        ) {
+            Text(
+                text = getRawTextOfRange(node.startOffset, node.endOffset),
+                modifier = Modifier.postSheetItem(),
+            )
+        }
+
         MarkdownElementTypes.ATX_1,
         MarkdownTokenTypes.SETEXT_1,
             -> CompositionLocalProvider(
@@ -90,7 +114,7 @@ fun ASTNodeRenderer(
             ),
         ) {
             val headerText = StringBuilder()
-            node.children.forEach { child ->
+            childNodes.forEach { child ->
                 if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
                     headerText.append(getRawTextOfRange(child.startOffset, child.endOffset))
                 }
@@ -121,7 +145,7 @@ fun ASTNodeRenderer(
             ),
         ) {
             val headerText = StringBuilder()
-            node.children.forEach { child ->
+            childNodes.forEach { child ->
                 if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
                     headerText.append(
                         getRawTextOfRange(
@@ -241,7 +265,7 @@ fun ASTNodeRenderer(
             ),
         ) {
             val headerText = StringBuilder()
-            node.children.forEach { child ->
+            childNodes.forEach { child ->
                 if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
                     headerText.append(
                         getRawTextOfRange(
@@ -261,58 +285,67 @@ fun ASTNodeRenderer(
         }
 
 
-        MarkdownElementTypes.PARAGRAPH, MarkdownTokenTypes.TEXT -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-        ) {
-            val text = StringBuilder()
-            node.children.forEach { child ->
-                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
-                    text.append(
-                        getRawTextOfRange(
-                            child.startOffset,
-                            child.endOffset,
-                        ),
+//        MarkdownElementTypes.PARAGRAPH, MarkdownTokenTypes.TEXT -> CompositionLocalProvider(
+//            value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+//                color = MaterialTheme.colorScheme.onSurface,
+//            ),
+//        ) {
+//            val text = StringBuilder()
+//            node.children.forEach { child ->
+//                if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+//                    text.append(
+//                        getRawTextOfRange(
+//                            child.startOffset,
+//                            child.endOffset,
+//                        ),
+//                    )
+//                }
+//            }
+//            Text(
+//                text = text.toString(),
+//                modifier = Modifier.postSheetItem(),
+//            )
+//        }
+//
+//
+//        MarkdownElementTypes.LIST_ITEM -> {
+//            val paragraphText = StringBuilder()
+//            node.children.forEach { child ->
+//                paragraphText.append(
+//                    getRawTextOfRange(
+//                        child.startOffset,
+//                        child.endOffset,
+//                    ),
+//                )
+//            }
+//            MarkdownTokenTypes.LIST_BULLET.buildMarkdownTagType(
+//                text = paragraphText.toString(),
+//            )
+//        }
+
+        else -> if (childNodes.isEmpty()) {
+            CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
+            ) {
+                TextButton(
+                    onClick = {},
+                    modifier = Modifier.postSheetItem(),
+                    contentPadding = PaddingValues(),
+                ) {
+                    Text(
+                        "TYPE ${node.type.name} NOT HANDLED.",
                     )
                 }
             }
-            Text(
-                text = text.toString(),
-                modifier = Modifier.postSheetItem(),
-            )
-        }
-
-
-        MarkdownElementTypes.LIST_ITEM -> {
-            val paragraphText = StringBuilder()
-            node.children.forEach { child ->
-                paragraphText.append(
-                    getRawTextOfRange(
-                        child.startOffset,
-                        child.endOffset,
-                    ),
+        } else {
+            for (child in childNodes) {
+                ASTNodeRenderer(
+                    node = child,
+                    getRawTextOfRange = getRawTextOfRange,
                 )
             }
-            MarkdownTokenTypes.LIST_BULLET.buildMarkdownTagType(
-                text = paragraphText.toString(),
-            )
-        }
-
-        else -> if (childNodes.isEmpty()) {
-            node.type.buildMarkdownTagType(
-                text = getRawTextOfRange(
-                    node.startOffset,
-                    node.endOffset,
-                ),
-            )
-        } else {
-//            for (child in childNodes) {
-//                ASTNodeRenderer(
-//                    node = child,
-//                    getRawTextOfRange = getRawTextOfRange,
-//                )
-//            }
         }
     }
 }
@@ -402,20 +435,5 @@ fun IElementType.buildMarkdownTagType(
 //        MarkdownTokenTypes.EMAIL_AUTOLINK -> "An automatically recognized email link (e.g., <mailto:a@b.com>)"
 //        MarkdownTokenTypes.HTML_TAG -> "Raw HTML tag"
 //        MarkdownTokenTypes.BAD_CHARACTER -> "An unrecognized or invalid character"
-        else -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-        ) {
-            TextButton(
-                onClick = {},
-                modifier = Modifier.postSheetItem(),
-                contentPadding = PaddingValues(),
-            ) {
-                Text(
-                    "TYPE ${this@buildMarkdownTagType.name} NOT HANDLED.",
-                )
-            }
-        }
     }
 }
