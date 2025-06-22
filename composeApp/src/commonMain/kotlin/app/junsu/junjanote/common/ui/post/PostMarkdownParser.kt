@@ -360,11 +360,6 @@ fun MarkdownBlockQuote(
             )
         }
     }
-    Spacer(
-        modifier = Modifier.height(
-            height = 8.dp,
-        ),
-    )
 }
 
 @Composable
@@ -401,11 +396,6 @@ fun MarkdownList(
             }
         }
     }
-    Spacer(
-        modifier = Modifier.height(
-            height = 8.dp,
-        ),
-    )
 }
 
 @Composable
@@ -443,11 +433,6 @@ fun MarkdownOrderedList(
             }
         }
     }
-    Spacer(
-        modifier = Modifier.height(
-            height = 8.dp,
-        ),
-    )
 }
 
 @Composable
@@ -481,11 +466,6 @@ fun MarkdownCodeBlock(
             ),
         ).padding(
             all = 4.dp,
-        ),
-    )
-    Spacer(
-        modifier = Modifier.height(
-            height = 8.dp,
         ),
     )
 }
@@ -573,11 +553,6 @@ fun MarkdownImage(
             color = Color.Gray,
         )
     }
-    Spacer(
-        modifier = Modifier.height(
-            height = 8.dp,
-        ),
-    )
 }
 
 @Composable
