@@ -103,6 +103,7 @@ private fun ASTNodeRenderer(
                     getRawTextOfRange = getRawTextOfRange,
                     textStyle = MaterialTheme.typography.headlineLarge.copy(
                         fontFamily = FontFamily.Serif,
+                        color = MaterialTheme.colorScheme.onSurface,
                     ),
                     modifier = modifier,
                 )
@@ -113,7 +114,9 @@ private fun ASTNodeRenderer(
             MarkdownHeader(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.headlineMedium,
+                textStyle = MaterialTheme.typography.headlineMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
                         horizontal = 16.0.dp,
@@ -126,7 +129,9 @@ private fun ASTNodeRenderer(
             MarkdownHeader(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.headlineSmall,
+                textStyle = MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
                         horizontal = 32.0.dp,
@@ -139,7 +144,9 @@ private fun ASTNodeRenderer(
             MarkdownHeader(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.titleLarge,
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
                         horizontal = 32.0.dp,
@@ -152,7 +159,9 @@ private fun ASTNodeRenderer(
             MarkdownHeader(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
                         horizontal = 32.0.dp,
@@ -165,7 +174,11 @@ private fun ASTNodeRenderer(
             MarkdownHeader(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.34f,
+                    ),
+                ),
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
                         horizontal = 32.0.dp,
@@ -482,7 +495,6 @@ fun MarkdownLink(
             it.endOffset,
         )
     } ?: ""
-
     ClickableText(
         text = AnnotatedString(
             text = linkText,
