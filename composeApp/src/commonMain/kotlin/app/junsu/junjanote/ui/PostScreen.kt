@@ -16,10 +16,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Person2
+import androidx.compose.material.icons.filled.Person3
+import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -89,6 +94,44 @@ fun PostScreen(
     Scaffold(
         modifier = modifier,
     ) { paddingValues ->
+        NavigationRail {
+            NavigationRailItem(
+                selected = true,
+                onClick = {
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Person2,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text("TEST") },
+            )
+            NavigationRailItem(
+                selected = true,
+                onClick = {
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Person4,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text("TES223T") },
+            )
+            NavigationRailItem(
+                selected = true,
+                onClick = {
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Person3,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text("TEST123") },
+            )
+        }
         Box(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             contentAlignment = Alignment.Center,
