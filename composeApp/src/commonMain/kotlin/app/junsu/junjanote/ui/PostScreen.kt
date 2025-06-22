@@ -58,7 +58,7 @@ fun PostScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         scope.launch {
-            text = client.get("https://raw.githubusercontent.com/droidknights/DroidKnightsApp/refs/heads/main/README.md").bodyAsText()
+            text = client.get("https://gist.githubusercontent.com/mufid/4062574/raw/300fb2535bcb1c6766cd990777a3b929abb42572/markdown-syntax.md").bodyAsText()
             val flavour = GFMFlavourDescriptor()
             val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text!!)
             md = parsedTree
