@@ -50,6 +50,10 @@ import org.intellij.markdown.parser.MarkdownParser
 
 data class Post(
     val markdownRawUrl: String,
+    val thumbnailImageUrl: String,
+    val title: String,
+    val subtitle: String,
+    val caption: String,
 )
 
 @Composable
@@ -89,7 +93,7 @@ fun PostScreen(
                     postSheetHeaderItem(
                         thumbnail = {
                             AsyncImage(
-                                model = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
+                                model = post.thumbnailImageUrl,
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxWidth().height(
@@ -101,13 +105,13 @@ fun PostScreen(
                             )
                         },
                         title = {
-                            Text("This is Text Title")
+                            Text(post.title)
                         },
                         subtitle = {
-                            Text("Subtitle looks good")
+                            Text(post.subtitle)
                         },
-                        description = {
-                            Text("And this is caption")
+                        caption = {
+                            Text(post.caption)
                         },
                     )
                     markdownPostSheetItems(

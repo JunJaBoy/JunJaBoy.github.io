@@ -21,6 +21,10 @@ fun App() {
         PostScreen(
             post = Post(
                 markdownRawUrl = "https://gist.githubusercontent.com/mufid/4062574/raw/300fb2535bcb1c6766cd990777a3b929abb42572/markdown-syntax.md",
+                thumbnailImageUrl = "https://upload.wikimedia.org/wikipedia/commons/6/61/San_Francisco_from_the_Marin_Headlands_in_August_2022.jpg",
+                title = "Markdown Test File",
+                subtitle = "I should make subtitle optional.",
+                caption = "Sometimes we need to take a rest",
             ),
         )
     }

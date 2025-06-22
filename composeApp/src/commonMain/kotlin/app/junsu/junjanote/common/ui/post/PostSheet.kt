@@ -26,7 +26,7 @@ fun LazyListScope.postSheetHeaderItem(
     thumbnail: @Composable () -> Unit,
     title: @Composable () -> Unit,
     subtitle: (@Composable () -> Unit)? = null,
-    description: @Composable () -> Unit,
+    caption: @Composable () -> Unit,
 ) {
     this.item(
         key = key,
@@ -130,7 +130,7 @@ fun LazyListScope.postSheetHeaderItem(
                             value = LocalTextStyle provides MaterialTheme.typography.labelLarge.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             ),
-                            content = description,
+                            content = caption,
                         )
                     },
                 )
