@@ -1,6 +1,8 @@
 package app.junsu.junjanote.common.ui.post
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -8,10 +10,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -51,386 +55,374 @@ fun LazyListScope.markdownPostSheetItems(
 private fun ASTNodeRenderer(
     node: ASTNode,
     getRawTextOfRange: GetRawTextOfRangeCallback,
+    modifier: Modifier = Modifier,
 ) {
     val childNodes = node.children
 
-    when (node.type) {
-        MarkdownElementTypes.IMAGE -> {
-            val imageUrlNode =
-                node.findChildOfType(MarkdownElementTypes.INLINE_LINK)?.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
-                    ?: node.findChildOfType(MarkdownTokenTypes.TEXT)
+    Surface(
+        modifier = modifier.postSheetItem(),
+        color = Color.Transparent,
+    ) {
+        when (node.type) {
+            MarkdownElementTypes.IMAGE -> {
+                val imageUrlNode =
+                    node.findChildOfType(MarkdownElementTypes.INLINE_LINK)?.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
+                        ?: node.findChildOfType(MarkdownTokenTypes.TEXT)
 
-            val altTextNode = node.findChildOfType(MarkdownElementTypes.LINK_TEXT) ?: node.findChildOfType(MarkdownElementTypes.LINK_LABEL)
+                val altTextNode =
+                    node.findChildOfType(MarkdownElementTypes.LINK_TEXT) ?: node.findChildOfType(MarkdownElementTypes.LINK_LABEL)
 
-            val imageUrl = imageUrlNode?.let {
-                val rawUrl = getRawTextOfRange(it.startOffset, it.endOffset)
-                rawUrl.removePrefix("<").removeSuffix(">").trim()
-            } ?: ""
+                val imageUrl = imageUrlNode?.let {
+                    val rawUrl = getRawTextOfRange(it.startOffset, it.endOffset)
+                    rawUrl.removePrefix("<").removeSuffix(">").trim()
+                } ?: ""
 
-            val altText = altTextNode?.let {
-                val rawAlt = getRawTextOfRange(it.startOffset, it.endOffset)
-                rawAlt.removePrefix("[").removeSuffix("]").trim()
-            } ?: ""
+                val altText = altTextNode?.let {
+                    val rawAlt = getRawTextOfRange(it.startOffset, it.endOffset)
+                    rawAlt.removePrefix("[").removeSuffix("]").trim()
+                } ?: ""
 
-            if (imageUrl.isNotEmpty()) {
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = altText,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(vertical = 8.dp),
-                    onError = {
-                        it.result.throwable.printStackTrace()
-                    },
-                )
-            } else {
-                Text(
-                    text = "Invalid Image: Alt='$altText'",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                )
-            }
-        }
-
-        MarkdownTokenTypes.EOL -> {
-            Column(modifier = Modifier.padding(vertical = 4.dp)) {}
-        }
-
-        MarkdownElementTypes.ATX_1,
-        MarkdownTokenTypes.SETEXT_1,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.displayMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif,
-            ),
-        ) {
-            val headerAnnotatedText = buildAnnotatedString {
-                childNodes.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL && child.type != MarkdownTokenTypes.SETEXT_1 && child.type != MarkdownTokenTypes.SETEXT_CONTENT) {
-                        appendStyledText(child, getRawTextOfRange)
-                    }
+                if (imageUrl.isNotEmpty()) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = altText,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        onError = {
+                            it.result.throwable.printStackTrace()
+                        },
+                    )
+                } else {
+                    Text(
+                        text = "Invalid Image: Alt='$altText'",
+                        color = MaterialTheme.colorScheme.error,
+                    )
                 }
             }
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp).padding(
-                    top = 32.0.dp,
-                    bottom = 16.0.dp,
-                ),
-            ) {
-                Text(
-                    text = headerAnnotatedText,
-                )
-                HorizontalDivider(
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
 
-        MarkdownElementTypes.ATX_2,
-        MarkdownTokenTypes.SETEXT_2,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.displaySmall.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-            ),
-        ) {
-            val headerAnnotatedText = buildAnnotatedString {
-                childNodes.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL && child.type != MarkdownTokenTypes.SETEXT_2 && child.type != MarkdownTokenTypes.SETEXT_CONTENT) {
-                        appendStyledText(child, getRawTextOfRange)
-                    }
-                }
+            MarkdownTokenTypes.EOL -> {
+                Column(modifier = Modifier.padding(vertical = 4.dp)) {}
             }
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp).padding(
-                    top = 32.0.dp,
-                    bottom = 16.0.dp,
-                ),
-            ) {
-                Text(
-                    text = headerAnnotatedText,
-                )
-                HorizontalDivider(
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
 
-        MarkdownElementTypes.ATX_3,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-            ),
-        ) {
-            val headerAnnotatedText = buildAnnotatedString {
-                node.children.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL) {
-                        appendStyledText(child, getRawTextOfRange)
-                    }
-                }
-            }
-            Text(
-                text = headerAnnotatedText,
-                modifier = Modifier.padding(horizontal = 16.dp).padding(
-                    top = 16.dp,
-                    bottom = 8.dp,
-                ),
-            )
-        }
-
-        MarkdownElementTypes.ATX_4,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-            ),
-        ) {
-            val headerAnnotatedText = buildAnnotatedString {
-                node.children.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL) {
-                        appendStyledText(child, getRawTextOfRange)
-                    }
-                }
-            }
-            Text(
-                text = headerAnnotatedText,
-                modifier = Modifier.padding(horizontal = 16.dp).padding(
-                    top = 16.dp,
-                    bottom = 8.dp,
-                ),
-            )
-        }
-
-        MarkdownElementTypes.ATX_5,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-            ),
-        ) {
-            val headerAnnotatedText = buildAnnotatedString {
-                node.children.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL) {
-                        appendStyledText(child, getRawTextOfRange)
-                    }
-                }
-            }
-            Text(
-                text = headerAnnotatedText,
-                modifier = Modifier.padding(horizontal = 16.dp).padding(
-                    top = 16.dp,
-                    bottom = 8.dp,
-                ),
-            )
-        }
-
-        MarkdownElementTypes.ATX_6,
-            -> CompositionLocalProvider(
-            value = LocalTextStyle provides MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.onSurface.copy(
-                    alpha = 0.38f,
-                ),
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-            ),
-        ) {
-            val headerAnnotatedText = buildAnnotatedString {
-                childNodes.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.ATX_HEADER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL) {
-                        appendStyledText(child, getRawTextOfRange)
-                    }
-                }
-            }
-            Text(
-                text = headerAnnotatedText,
-                modifier = Modifier.padding(horizontal = 16.dp).padding(
-                    top = 16.dp,
-                    bottom = 8.dp,
-                ),
-            )
-        }
-
-        MarkdownElementTypes.PARAGRAPH -> {
-            CompositionLocalProvider(
-                value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+            MarkdownElementTypes.ATX_1,
+            MarkdownTokenTypes.SETEXT_1,
+                -> CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.displayMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Serif,
                 ),
             ) {
-                val annotatedString = buildAnnotatedString {
-                    appendStyledText(node, getRawTextOfRange)
+                val headerAnnotatedText = buildAnnotatedString {
+                    childNodes.forEach { child ->
+                        appendStyledText(child, getRawTextOfRange)
+                    }
                 }
-                Text(
-                    text = annotatedString,
-                    modifier = Modifier.padding(horizontal = 16.dp).padding(vertical = 4.dp),
-                )
-            }
-        }
-
-        MarkdownTokenTypes.TEXT,
-        MarkdownTokenTypes.COLON,
-        MarkdownElementTypes.EMPH,
-        MarkdownElementTypes.STRONG,
-        MarkdownElementTypes.CODE_SPAN,
-        MarkdownElementTypes.INLINE_LINK,
-        MarkdownElementTypes.FULL_REFERENCE_LINK,
-        MarkdownElementTypes.SHORT_REFERENCE_LINK,
-        MarkdownTokenTypes.AUTOLINK,
-        MarkdownTokenTypes.EMAIL_AUTOLINK,
-        MarkdownTokenTypes.HARD_LINE_BREAK,
-        MarkdownTokenTypes.WHITE_SPACE,
-        MarkdownElementTypes.LINK_LABEL,
-        MarkdownElementTypes.LINK_DESTINATION,
-        MarkdownElementTypes.LINK_TEXT,
-        MarkdownElementTypes.LINK_TITLE,
-        MarkdownTokenTypes.LBRACKET, MarkdownTokenTypes.RBRACKET,
-        MarkdownTokenTypes.LPAREN, MarkdownTokenTypes.RPAREN,
-        MarkdownTokenTypes.LT, MarkdownTokenTypes.GT,
-        MarkdownTokenTypes.EXCLAMATION_MARK,
-        MarkdownTokenTypes.SINGLE_QUOTE, MarkdownTokenTypes.DOUBLE_QUOTE,
-        MarkdownTokenTypes.BACKTICK,
-        MarkdownTokenTypes.SETEXT_CONTENT,
-            -> {
-            if (childNodes.isNotEmpty()) {
-                for (child in childNodes) {
-                    ASTNodeRenderer(node = child, getRawTextOfRange = getRawTextOfRange)
-                }
-            } else {
-                println(
-                    "INFO: Top-level inline/syntax token unhandled directly: ${node.type.name} with content: '${
-                        getRawTextOfRange(
-                            node.startOffset,
-                            node.endOffset,
-                        )
-                    }'",
-                )
-            }
-        }
-
-        MarkdownElementTypes.CODE_BLOCK, MarkdownElementTypes.CODE_FENCE -> {
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp).padding(vertical = 8.dp).fillMaxWidth().then(
-                    Modifier.padding(8.dp),
-                ),
-            ) {
-                CompositionLocalProvider(
-                    value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
-                        fontFamily = FontFamily.Monospace,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                Column(
+                    modifier = Modifier.padding(
+                        top = 32.0.dp,
+                        bottom = 16.0.dp,
                     ),
                 ) {
-                    val codeContent = StringBuilder()
+                    Text(
+                        text = headerAnnotatedText,
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
+            MarkdownElementTypes.ATX_2,
+            MarkdownTokenTypes.SETEXT_2,
+                -> CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.displaySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
+            ) {
+                val headerAnnotatedText = buildAnnotatedString {
                     childNodes.forEach { child ->
-                        if (child.type == MarkdownTokenTypes.CODE_LINE || child.type == MarkdownTokenTypes.CODE_FENCE_CONTENT) {
-                            val line = getRawTextOfRange(child.startOffset, child.endOffset)
-                            codeContent.append(line)
-                            if (line.isNotEmpty() && !line.endsWith("\n")) {
-                                codeContent.append("\n")
+                        appendStyledText(child, getRawTextOfRange)
+                    }
+                }
+                Column(
+                    modifier = Modifier.padding(
+                        top = 32.0.dp,
+                        bottom = 16.0.dp,
+                    ),
+                ) {
+                    Text(
+                        text = headerAnnotatedText,
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
+            MarkdownElementTypes.ATX_3,
+                -> CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
+            ) {
+                val headerAnnotatedText = buildAnnotatedString {
+                    node.children.forEach { child ->
+                        appendStyledText(child, getRawTextOfRange)
+                    }
+                }
+                Text(
+                    text = headerAnnotatedText,
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        bottom = 8.dp,
+                    ),
+                )
+            }
+
+            MarkdownElementTypes.ATX_4,
+                -> CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
+            ) {
+                val headerAnnotatedText = buildAnnotatedString {
+                    node.children.forEach { child ->
+                        appendStyledText(child, getRawTextOfRange)
+                    }
+                }
+                Text(
+                    text = headerAnnotatedText,
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        bottom = 8.dp,
+                    ),
+                )
+            }
+
+            MarkdownElementTypes.ATX_5,
+                -> CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
+            ) {
+                val headerAnnotatedText = buildAnnotatedString {
+                    node.children.forEach { child ->
+                        appendStyledText(child, getRawTextOfRange)
+                    }
+                }
+                Text(
+                    text = headerAnnotatedText,
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        bottom = 8.dp,
+                    ),
+                )
+            }
+
+            MarkdownElementTypes.ATX_6,
+                -> CompositionLocalProvider(
+                value = LocalTextStyle provides MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.38f,
+                    ),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
+            ) {
+                val headerAnnotatedText = buildAnnotatedString {
+                    childNodes.forEach { child ->
+                        appendStyledText(child, getRawTextOfRange)
+                    }
+                }
+                Text(
+                    text = headerAnnotatedText,
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        bottom = 8.dp,
+                    ),
+                )
+            }
+
+            MarkdownElementTypes.PARAGRAPH -> {
+                CompositionLocalProvider(
+                    value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
+                ) {
+                    val annotatedString = buildAnnotatedString {
+                        appendStyledText(node, getRawTextOfRange)
+                    }
+                    Text(
+                        text = annotatedString,
+                        modifier = Modifier.padding(vertical = 4.dp),
+                    )
+                }
+            }
+
+            MarkdownTokenTypes.TEXT,
+            MarkdownTokenTypes.COLON,
+            MarkdownElementTypes.EMPH,
+            MarkdownElementTypes.STRONG,
+            MarkdownElementTypes.CODE_SPAN,
+            MarkdownElementTypes.INLINE_LINK,
+            MarkdownElementTypes.FULL_REFERENCE_LINK,
+            MarkdownElementTypes.SHORT_REFERENCE_LINK,
+            MarkdownTokenTypes.AUTOLINK,
+            MarkdownTokenTypes.EMAIL_AUTOLINK,
+            MarkdownTokenTypes.HARD_LINE_BREAK,
+            MarkdownTokenTypes.WHITE_SPACE,
+            MarkdownElementTypes.LINK_LABEL,
+            MarkdownElementTypes.LINK_DESTINATION,
+            MarkdownElementTypes.LINK_TEXT,
+            MarkdownElementTypes.LINK_TITLE,
+            MarkdownTokenTypes.LBRACKET,
+            MarkdownTokenTypes.RBRACKET,
+            MarkdownTokenTypes.LPAREN,
+            MarkdownTokenTypes.RPAREN,
+            MarkdownTokenTypes.LT,
+            MarkdownTokenTypes.GT,
+            MarkdownTokenTypes.EXCLAMATION_MARK,
+            MarkdownTokenTypes.SINGLE_QUOTE,
+            MarkdownTokenTypes.DOUBLE_QUOTE,
+            MarkdownTokenTypes.BACKTICK,
+            MarkdownTokenTypes.SETEXT_CONTENT,
+                -> {
+                if (childNodes.isNotEmpty()) {
+                    for (child in childNodes) {
+                        ASTNodeRenderer(
+                            node = child,
+                            getRawTextOfRange = getRawTextOfRange,
+                        )
+                    }
+                }
+            }
+
+            MarkdownElementTypes.CODE_BLOCK, MarkdownElementTypes.CODE_FENCE -> {
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp).fillMaxWidth().background(
+                            color = MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = 0.08f,
+                            ),
+                            shape = MaterialTheme.shapes.small,
+                        )
+                        .then(
+                            Modifier.padding(8.dp),
+                        ),
+                ) {
+                    CompositionLocalProvider(
+                        value = LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                            fontFamily = FontFamily.Monospace,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                    ) {
+                        val codeContent = StringBuilder()
+                        childNodes.forEach { child ->
+                            if (child.type == MarkdownTokenTypes.CODE_LINE || child.type == MarkdownTokenTypes.CODE_FENCE_CONTENT) {
+                                val line = getRawTextOfRange(child.startOffset, child.endOffset)
+                                codeContent.append(line)
+                                if (line.isNotEmpty() && !line.endsWith("\n")) {
+                                    codeContent.append("\n")
+                                }
+                            }
+                        }
+                        Text(text = codeContent.toString())
+                    }
+                }
+            }
+
+            MarkdownElementTypes.BLOCK_QUOTE -> {
+                Column(
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp).then(
+                        Modifier.padding(start = 8.dp),
+                    ),
+                ) {
+                    CompositionLocalProvider(
+                        value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            fontStyle = FontStyle.Italic,
+                        ),
+                    ) {
+                        childNodes.forEach { child ->
+                            if (child.type != MarkdownTokenTypes.BLOCK_QUOTE && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                                ASTNodeRenderer(node = child, getRawTextOfRange = getRawTextOfRange)
                             }
                         }
                     }
-                    Text(text = codeContent.toString())
                 }
             }
-        }
 
-        MarkdownElementTypes.BLOCK_QUOTE -> {
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp).padding(start = 16.dp, top = 4.dp, bottom = 4.dp).then(
-                    Modifier.padding(start = 8.dp),
-                ),
-            ) {
-                CompositionLocalProvider(
-                    value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        fontStyle = FontStyle.Italic,
-                    ),
-                ) {
+            MarkdownElementTypes.UNORDERED_LIST, MarkdownElementTypes.ORDERED_LIST -> {
+                Column(modifier = Modifier.padding(vertical = 4.dp)) {
                     childNodes.forEach { child ->
-                        if (child.type != MarkdownTokenTypes.BLOCK_QUOTE && child.type != MarkdownTokenTypes.WHITE_SPACE) {
+                        if (child.type == MarkdownElementTypes.LIST_ITEM) {
                             ASTNodeRenderer(node = child, getRawTextOfRange = getRawTextOfRange)
                         }
                     }
                 }
             }
-        }
 
-        MarkdownElementTypes.UNORDERED_LIST, MarkdownElementTypes.ORDERED_LIST -> {
-            Column(modifier = Modifier.padding(horizontal = 16.dp).padding(vertical = 4.dp)) {
-                childNodes.forEach { child ->
-                    if (child.type == MarkdownElementTypes.LIST_ITEM) {
-                        ASTNodeRenderer(node = child, getRawTextOfRange = getRawTextOfRange)
-                    }
-                }
-            }
-        }
+            MarkdownElementTypes.LIST_ITEM -> {
+                val isOrdered = node.parent?.type == MarkdownElementTypes.ORDERED_LIST
+                val listItemMarker =
+                    node.findChildOfType(MarkdownTokenTypes.LIST_NUMBER) ?: node.findChildOfType(MarkdownTokenTypes.LIST_BULLET)
 
-        MarkdownElementTypes.LIST_ITEM -> {
-            val isOrdered = node.parent?.type == MarkdownElementTypes.ORDERED_LIST
-            val listItemMarker =
-                node.findChildOfType(MarkdownTokenTypes.LIST_NUMBER) ?: node.findChildOfType(MarkdownTokenTypes.LIST_BULLET)
+                val bulletOrNumber =
+                    listItemMarker?.let { getRawTextOfRange(it.startOffset, it.endOffset).trim() } ?: if (isOrdered) "1." else "•"
 
-            val bulletOrNumber =
-                listItemMarker?.let { getRawTextOfRange(it.startOffset, it.endOffset).trim() } ?: if (isOrdered) "1." else "•"
-
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 4.dp),
-            ) {
-                Text(
-                    text = "$bulletOrNumber ",
-                    modifier = Modifier.padding(end = 4.dp),
-                )
-                childNodes.forEach { child ->
-                    if (child.type != MarkdownTokenTypes.LIST_BULLET && child.type != MarkdownTokenTypes.LIST_NUMBER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL) {
-                        ASTNodeRenderer(node = child, getRawTextOfRange = getRawTextOfRange)
-                    }
-                }
-            }
-        }
-
-
-        MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp).padding(
-                vertical = 32.0.dp,
-            ),
-        )
-
-        MarkdownElementTypes.HTML_BLOCK,
-        MarkdownTokenTypes.HTML_TAG,
-            -> {
-            val rawHtml = getRawTextOfRange(node.startOffset, node.endOffset)
-            Text(
-                text = rawHtml,
-                fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(horizontal = 16.dp).padding(vertical = 4.dp),
-            )
-        }
-
-        else -> {
-            if (childNodes.isEmpty()) {
-                CompositionLocalProvider(
-                    value = LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.error,
-                    ),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    val rawText = getRawTextOfRange(node.startOffset, node.endOffset)
                     Text(
-                        "UNHANDLED BLOCK TYPE: ${node.type.name} -> '$rawText'",
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = "$bulletOrNumber ",
+                        modifier = Modifier.padding(end = 4.dp),
                     )
+                    Column(modifier = Modifier.weight(1f)) {
+                        childNodes.forEach { child ->
+                            if (child.type != MarkdownTokenTypes.LIST_BULLET && child.type != MarkdownTokenTypes.LIST_NUMBER && child.type != MarkdownTokenTypes.WHITE_SPACE && child.type != MarkdownTokenTypes.EOL) {
+                                ASTNodeRenderer(node = child, getRawTextOfRange = getRawTextOfRange)
+                            }
+                        }
+                    }
                 }
-            } else {
-                println("INFO: Unhandled parent block type: ${node.type.name}. Rendering children recursively.")
-                for (child in childNodes) {
-                    ASTNodeRenderer(
-                        node = child,
-                        getRawTextOfRange = getRawTextOfRange,
-                    )
+            }
+
+            MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalDivider(
+                modifier = Modifier.padding(
+                    vertical = 32.0.dp,
+                ),
+            )
+
+            MarkdownElementTypes.HTML_BLOCK,
+            MarkdownTokenTypes.HTML_TAG,
+                -> {
+                val rawHtml = getRawTextOfRange(node.startOffset, node.endOffset)
+                Text(
+                    text = rawHtml,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(vertical = 4.dp),
+                )
+            }
+
+            else -> {
+                if (childNodes.isEmpty()) {
+                } else {
+                    for (child in childNodes) {
+                        ASTNodeRenderer(
+                            node = child,
+                            getRawTextOfRange = getRawTextOfRange,
+                        )
+                    }
                 }
             }
         }
@@ -442,14 +434,17 @@ private fun AnnotatedString.Builder.appendStyledText(
     node: ASTNode,
     getRawTextOfRange: GetRawTextOfRangeCallback,
 ) {
-    if (node.children.isEmpty() && (node.type == MarkdownTokenTypes.TEXT || node.type == MarkdownTokenTypes.CODE_LINE)) {
+    if (node.children.isEmpty() && (node.type == MarkdownTokenTypes.TEXT || node.type == MarkdownTokenTypes.CODE_LINE || node.type == MarkdownTokenTypes.SETEXT_CONTENT)) {
         append(getRawTextOfRange(node.startOffset, node.endOffset))
         return
     }
 
     node.children.forEach { child ->
         when (child.type) {
-            MarkdownTokenTypes.TEXT, MarkdownTokenTypes.COLON -> {
+            MarkdownTokenTypes.TEXT,
+            MarkdownTokenTypes.COLON,
+            MarkdownTokenTypes.SETEXT_CONTENT,
+                -> {
                 append(getRawTextOfRange(child.startOffset, child.endOffset))
             }
 
@@ -466,37 +461,34 @@ private fun AnnotatedString.Builder.appendStyledText(
             }
 
             MarkdownElementTypes.CODE_SPAN -> {
-                withStyle(SpanStyle(fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.primary)) {
+                withStyle(SpanStyle(fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                    pushStyle(
+                        SpanStyle(
+                            background = MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = 0.08f,
+                            ),
+                        ),
+                    )
                     child.children.forEach { codeChild ->
                         if (codeChild.type == MarkdownTokenTypes.TEXT || codeChild.type == MarkdownTokenTypes.CODE_LINE) {
                             append(getRawTextOfRange(codeChild.startOffset, codeChild.endOffset))
+                        } else {
+                            appendStyledText(codeChild, getRawTextOfRange)
                         }
                     }
+                    pop()
                 }
             }
 
             MarkdownElementTypes.INLINE_LINK, MarkdownElementTypes.FULL_REFERENCE_LINK, MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
                 val linkTextNode = child.findChildOfType(MarkdownElementTypes.LINK_TEXT)
-                val linkDestinationNode = child.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
-                val linkTitleNode = child.findChildOfType(MarkdownElementTypes.LINK_TITLE)
 
                 val linkText = linkTextNode?.let {
                     buildAnnotatedString { appendStyledText(it, getRawTextOfRange) }.text
                 } ?: getRawTextOfRange(child.startOffset, child.endOffset).trim()
 
-                val linkUrl = linkDestinationNode?.let { getRawTextOfRange(it.startOffset, it.endOffset) }?.trim()?.removePrefix("<")
-                    ?.removeSuffix(">") ?: ""
-                val linkTitle =
-                    linkTitleNode?.let { getRawTextOfRange(it.startOffset, it.endOffset) }?.trim()?.removePrefix("\"")?.removeSuffix("\"")
-                        ?.removePrefix("(")?.removeSuffix(")") ?: ""
-
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)) {
                     append(linkText)
-                }
-                if (linkUrl.isNotEmpty() && linkTitle.isNotEmpty()) {
-                    // This part is for debugging or showing title, not typically part of standard Markdown rendering within text
-                } else if (linkUrl.isNotEmpty() && linkText.isBlank()) {
-                    // This part is for debugging or showing URL if text is blank for bare URLs
                 }
             }
 
@@ -515,19 +507,25 @@ private fun AnnotatedString.Builder.appendStyledText(
                 append(" ")
             }
 
-            MarkdownTokenTypes.LBRACKET, MarkdownTokenTypes.RBRACKET,
-            MarkdownTokenTypes.LPAREN, MarkdownTokenTypes.RPAREN,
-            MarkdownTokenTypes.LT, MarkdownTokenTypes.GT,
+            MarkdownTokenTypes.ATX_HEADER,
+            MarkdownTokenTypes.SETEXT_1,
+            MarkdownTokenTypes.SETEXT_2,
+            MarkdownTokenTypes.LBRACKET,
+            MarkdownTokenTypes.RBRACKET,
+            MarkdownTokenTypes.LPAREN,
+            MarkdownTokenTypes.RPAREN,
+            MarkdownTokenTypes.LT,
+            MarkdownTokenTypes.GT,
             MarkdownTokenTypes.EXCLAMATION_MARK,
-            MarkdownTokenTypes.SINGLE_QUOTE, MarkdownTokenTypes.DOUBLE_QUOTE,
-            MarkdownTokenTypes.EMPH,
+            MarkdownTokenTypes.SINGLE_QUOTE,
+            MarkdownTokenTypes.DOUBLE_QUOTE,
             MarkdownTokenTypes.BACKTICK,
             MarkdownElementTypes.LINK_LABEL,
             MarkdownElementTypes.LINK_DESTINATION,
             MarkdownElementTypes.LINK_TITLE,
             MarkdownElementTypes.LINK_TEXT,
                 -> {
-                if (child.type == MarkdownElementTypes.LINK_TEXT || child.type == MarkdownElementTypes.LINK_LABEL) {
+                if (child.children.isNotEmpty()) {
                     appendStyledText(child, getRawTextOfRange)
                 }
             }
@@ -535,15 +533,6 @@ private fun AnnotatedString.Builder.appendStyledText(
             else -> {
                 if (child.children.isNotEmpty()) {
                     appendStyledText(child, getRawTextOfRange)
-                } else {
-                    println(
-                        "WARNING: Unhandled inline token type: ${child.type.name} with content: '${
-                            getRawTextOfRange(
-                                child.startOffset,
-                                child.endOffset,
-                            )
-                        }'",
-                    )
                 }
             }
         }
