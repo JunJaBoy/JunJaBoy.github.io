@@ -2,6 +2,7 @@ package app.junsu.junjanote.common.ui.post
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -75,22 +76,27 @@ private fun ASTNodeRenderer(
             MarkdownParagraph(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 16.0.dp,
+                    ),
+                ),
             )
         }
 
         MarkdownElementTypes.ATX_1, MarkdownElementTypes.SETEXT_1 -> {
             val cornerRadius = 16.0.dp
             Column(
-                modifier = Modifier.postSheetItem().fillMaxWidth().background(
+                modifier = Modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 8.0.dp,
+                    ),
+                ).fillMaxWidth().background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = SmoothCornerShape(
                         all = cornerRadius,
                     ),
-                ).padding(
-                    horizontal = 16.0.dp,
-                    vertical = 4.0.dp,
-                ),
+                ).padding(all = 16.0.dp),
             ) {
                 MarkdownHeader(
                     node = node,
@@ -108,7 +114,11 @@ private fun ASTNodeRenderer(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
                 textStyle = MaterialTheme.typography.headlineMedium,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 16.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -117,7 +127,11 @@ private fun ASTNodeRenderer(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
                 textStyle = MaterialTheme.typography.headlineSmall,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -126,7 +140,11 @@ private fun ASTNodeRenderer(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
                 textStyle = MaterialTheme.typography.titleLarge,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -135,7 +153,11 @@ private fun ASTNodeRenderer(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
                 textStyle = MaterialTheme.typography.titleMedium,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -144,7 +166,11 @@ private fun ASTNodeRenderer(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
                 textStyle = MaterialTheme.typography.titleMedium,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -152,7 +178,11 @@ private fun ASTNodeRenderer(
             MarkdownBlockQuote(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -161,7 +191,11 @@ private fun ASTNodeRenderer(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
                 bullet = "• ",
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -169,7 +203,11 @@ private fun ASTNodeRenderer(
             MarkdownOrderedList(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -177,13 +215,21 @@ private fun ASTNodeRenderer(
             MarkdownCodeBlock(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
         MarkdownTokenTypes.HORIZONTAL_RULE -> {
             HorizontalRule(
-                modifier = modifier,
+                modifier = modifier.postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
+                ),
             )
         }
 
@@ -191,6 +237,10 @@ private fun ASTNodeRenderer(
             Spacer(
                 modifier = Modifier.height(
                     height = MaterialTheme.typography.bodyLarge.fontSize.value.dp / 2,
+                ).postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
                 ),
             )
         }
@@ -199,6 +249,10 @@ private fun ASTNodeRenderer(
             Spacer(
                 modifier = Modifier.height(
                     height = MaterialTheme.typography.bodyLarge.fontSize.value.dp,
+                ).postSheetItem(
+                    padding = PaddingValues(
+                        horizontal = 32.0.dp,
+                    ),
                 ),
             )
         }
@@ -229,11 +283,6 @@ fun MarkdownParagraph(
     Text(
         text = annotatedString,
         modifier = modifier.fillMaxWidth(),
-    )
-    Spacer(
-        modifier = Modifier.height(
-            height = 8.dp,
-        ),
     )
 }
 
