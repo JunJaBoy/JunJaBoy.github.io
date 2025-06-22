@@ -74,7 +74,15 @@ fun PostScreen(
         }
     }
 
-    if (md == null || text == null) return CircularProgressIndicator()
+    if (md == null || text == null) return Scaffold { paddingValues ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+    }
 
     Scaffold(
         modifier = modifier,
