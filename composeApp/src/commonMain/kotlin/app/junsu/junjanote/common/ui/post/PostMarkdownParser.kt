@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.junsu.junjanote.common.ui.corner.SmoothCornerShape
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
@@ -85,14 +86,27 @@ private fun ASTNodeRenderer(
         }
 
         MarkdownElementTypes.ATX_1, MarkdownElementTypes.SETEXT_1 -> {
-            MarkdownHeader(
-                node = node,
-                getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.headlineLarge.copy(
-                    fontFamily = FontFamily.Serif,
+            val cornerRadius = 16.0.dp
+            Column(
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = SmoothCornerShape(
+                        all = cornerRadius,
+                    ),
+                ).padding(
+                    horizontal = 16.0.dp,
+                    vertical = 4.0.dp,
                 ),
-                modifier = modifier,
-            )
+            ) {
+                MarkdownHeader(
+                    node = node,
+                    getRawTextOfRange = getRawTextOfRange,
+                    textStyle = MaterialTheme.typography.headlineLarge.copy(
+                        fontFamily = FontFamily.Serif,
+                    ),
+                    modifier = modifier,
+                )
+            }
         }
 
         MarkdownElementTypes.ATX_2, MarkdownElementTypes.SETEXT_2 -> {
@@ -246,17 +260,10 @@ fun MarkdownHeader(
         )
         Text(
             text = annotatedString,
+            modifier = modifier,
             style = textStyle,
-            modifier = modifier.padding(
-                vertical = 4.dp,
-            ),
         )
     }
-    Spacer(
-        modifier = Modifier.height(
-            height = 4.dp,
-        ),
-    )
 }
 
 @Composable
