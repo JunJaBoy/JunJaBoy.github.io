@@ -48,8 +48,13 @@ import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 
+data class Post(
+    val markdownRawUrl: String,
+)
+
 @Composable
 fun PostScreen(
+    post: Post,
     modifier: Modifier = Modifier,
 ) {
     val client = remember { HttpClient() }
@@ -58,7 +63,7 @@ fun PostScreen(
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         scope.launch {
-            text = client.get("https://gist.githubusercontent.com/mufid/4062574/raw/300fb2535bcb1c6766cd990777a3b929abb42572/markdown-syntax.md").bodyAsText()
+            text = client.get(post.markdownRawUrl).bodyAsText()
             val flavour = GFMFlavourDescriptor()
             val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(text!!)
             md = parsedTree
