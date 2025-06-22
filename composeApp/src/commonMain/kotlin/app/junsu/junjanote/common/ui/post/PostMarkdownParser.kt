@@ -78,7 +78,7 @@ private fun ASTNodeRenderer(
                 getRawTextOfRange = getRawTextOfRange,
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
-                        horizontal = 16.0.dp,
+                        horizontal = 32.0.dp,
                     ),
                 ),
             )
@@ -89,7 +89,7 @@ private fun ASTNodeRenderer(
             Column(
                 modifier = Modifier.postSheetItem(
                     padding = PaddingValues(
-                        horizontal = 8.0.dp,
+                        horizontal = 16.0.dp,
                     ),
                 ).fillMaxWidth().background(
                     color = MaterialTheme.colorScheme.surface,
@@ -119,7 +119,7 @@ private fun ASTNodeRenderer(
                 ),
                 modifier = modifier.postSheetItem(
                     padding = PaddingValues(
-                        horizontal = 16.0.dp,
+                        horizontal = 32.0.dp,
                     ),
                 ),
             )
