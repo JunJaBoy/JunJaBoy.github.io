@@ -140,7 +140,8 @@ fun PostScreen(
                 LazyColumn(
                     modifier = Modifier.safeMaxWidth(),
                     contentPadding = PaddingValues(
-                        vertical = 32.0.dp,
+                        top = 128.0.dp,
+                        bottom = 32.0.dp,
                     ),
                 ) {
                     postSheetHeaderItem(
