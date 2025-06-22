@@ -119,7 +119,7 @@ private fun ASTNodeRenderer(
                 IconButton(
                     onClick = {},
                     colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                 ) {
                     Icon(
