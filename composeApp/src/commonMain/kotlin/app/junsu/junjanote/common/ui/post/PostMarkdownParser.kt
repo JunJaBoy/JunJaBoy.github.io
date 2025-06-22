@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -49,15 +48,10 @@ fun LazyListScope.markdownPostSheetItems(
         items = nodes,
         key = key,
     ) { _, node ->
-        Surface(
-            modifier = Modifier.postSheetItem(),
-            color = Color.Transparent,
-        ) {
-            ASTNodeRenderer(
-                node = node,
-                getRawTextOfRange = getRawTextOfRange,
-            )
-        }
+        ASTNodeRenderer(
+            node = node,
+            getRawTextOfRange = getRawTextOfRange,
+        )
     }
     this.item {
         Spacer(
@@ -88,7 +82,7 @@ private fun ASTNodeRenderer(
         MarkdownElementTypes.ATX_1, MarkdownElementTypes.SETEXT_1 -> {
             val cornerRadius = 16.0.dp
             Column(
-                modifier = Modifier.fillMaxWidth().background(
+                modifier = Modifier.postSheetItem().fillMaxWidth().background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = SmoothCornerShape(
                         all = cornerRadius,
@@ -149,7 +143,7 @@ private fun ASTNodeRenderer(
             MarkdownHeader(
                 node = node,
                 getRawTextOfRange = getRawTextOfRange,
-                textStyle = MaterialTheme.typography.titleSmall,
+                textStyle = MaterialTheme.typography.titleMedium,
                 modifier = modifier,
             )
         }

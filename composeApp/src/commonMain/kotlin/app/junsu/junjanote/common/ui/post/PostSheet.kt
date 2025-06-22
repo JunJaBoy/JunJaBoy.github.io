@@ -183,8 +183,8 @@ fun LazyListScope.postSheetFooterItem(
 
 
 @Composable
-fun Modifier.postSheetItem(): Modifier = this.background(
+fun Modifier.postSheetItem(
+    padding: PaddingValues = PaddingValues(),
+): Modifier = this.background(
     color = MaterialTheme.colorScheme.surfaceContainer,
-).fillMaxWidth().padding(
-    horizontal = 32.0.dp,
-)
+).fillMaxWidth().padding(padding)
