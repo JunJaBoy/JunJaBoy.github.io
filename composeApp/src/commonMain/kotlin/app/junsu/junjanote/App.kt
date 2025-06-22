@@ -5,7 +5,6 @@ import app.junsu.junjanote.common.ui.Destination
 import app.junsu.junjanote.common.ui.DestinationIcon
 import app.junsu.junjanote.common.ui.image.getAsyncImageLoader
 import app.junsu.junjanote.common.ui.theme.NoteTheme
-import app.junsu.junjanote.ui.MainScreen
 import app.junsu.junjanote.ui.PostScreen
 import coil3.compose.setSingletonImageLoaderFactory
 import org.jetbrains.compose.ui.tooling.preview.Preview
